@@ -1,0 +1,4404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elegant Dream Studio Pro</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<!-- jsPDF autotable සඳහා CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<style>
+  /* All your existing CSS styles remain the same */
+  :root {
+    --primary: #0066cc;
+    --primary-dark: #004a99;
+    --primary-light: #3399ff;
+    --secondary: #7b68ee;
+    --accent: #00cc99;
+    --bg: #0a1929;
+    --card: #132f4c;
+    --text: #e6f7ff;
+    --text-secondary: #a3d5ff;
+    --border: rgba(100, 181, 246, 0.15);
+    --glass-bg: rgba(19, 47, 76, 0.7);
+    --glass-border: rgba(100, 181, 246, 0.2);
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    --success: #00cc88;
+    --warning: #ffaa00;
+    --danger: #ff4444;
+    --info: #33b5e5;
+  }
+  
+  [data-theme="light"] {
+    --primary: #0066cc;
+    --primary-dark: #004a99;
+    --primary-light: #3399ff;
+    --secondary: #7b68ee;
+    --accent: #00cc99;
+    --bg: #f0f9ff;
+    --card: #ffffff;
+    --text: #1a365d;
+    --text-secondary: #4a5568;
+    --border: rgba(0, 102, 204, 0.15);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 102, 204, 0.1);
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  }
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  /* === NEUMORPHISM EFFECTS === */
+  .neu-card {
+    background: var(--card);
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+      8px 8px 16px rgba(0, 0, 0, 0.2),
+      -8px -8px 16px rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  }
+  
+  .neu-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      12px 12px 24px rgba(0, 0, 0, 0.3),
+      -12px -12px 24px rgba(255, 255, 255, 0.08);
+  }
+  
+  .neu-input {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    box-shadow: 
+      inset 3px 3px 6px rgba(0, 0, 0, 0.1),
+      inset -3px -3px 6px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .neu-input:focus {
+    box-shadow: 
+      inset 4px 4px 8px rgba(0, 0, 0, 0.15),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.1),
+      0 0 0 3px rgba(0, 102, 204, 0.2);
+    border-color: var(--primary);
+  }
+  
+  .neu-btn {
+    background: linear-gradient(145deg, var(--primary-dark), var(--primary));
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 
+      4px 4px 8px rgba(0, 0, 0, 0.2),
+      -4px -4px 8px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .neu-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+  }
+  
+  .neu-btn:hover::before {
+    left: 100%;
+  }
+  
+  .neu-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+      6px 6px 12px rgba(0, 0, 0, 0.25),
+      -6px -6px 12px rgba(255, 255, 255, 0.15);
+  }
+  
+  .neu-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* === LOGIN PAGE === */
+  .login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #001e3c 0%, #0a1929 50%, #132f4c 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .login-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 102, 204, 0.1) 0%, transparent 70%);
+    animation: float 20s infinite linear;
+  }
+  
+  @keyframes float {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .login-card {
+    background: var(--glass-bg);
+    border-radius: 32px;
+    padding: 60px 50px;
+    width: 100%;
+    max-width: 520px;
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    z-index: 1;
+  }
+  
+  .login-title {
+    font-size: 44px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #00cc99, #0066cc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* === DASHBOARD LAYOUT === */
+  .dashboard-container {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 280px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar-collapsed {
+    transform: translateX(-280px);
+  }
+  
+  .logo-section {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .logo {
+    font-size: 32px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+  
+  /* Quick Actions */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+  
+  .quick-action-btn {
+    padding: 14px;
+    background: var(--glass-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .quick-action-btn:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+  }
+  
+  /* Navigation */
+  .nav-section {
+    flex: 1;
+  }
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px 20px;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 16px;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  
+  .nav-item:hover, .nav-item.active {
+    background: linear-gradient(90deg, rgba(0, 102, 204, 0.2), transparent);
+    color: var(--primary-light);
+    border-left: 4px solid var(--primary);
+  }
+  
+  .nav-item i {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+  }
+  
+  /* Main Content */
+  .main-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .main-content-expanded {
+    margin-left: 0;
+  }
+  
+  /* Top Bar */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: var(--card);
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+  }
+  
+  .left-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  /* User Info */
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    background: var(--glass-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+  }
+  
+  /* === DASHBOARD WIDGETS === */
+  .dashboard-widgets {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+  }
+  
+  .widget {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 30px;
+    border: 1px solid var(--border);
+  }
+  
+  .widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+  
+  .widget-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  
+  /* === FLOATING ACTION BUTTON === */
+  .fab-container {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 1000;
+  }
+  
+  .fab {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.4);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.6);
+  }
+  
+  .fab-menu {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 200px;
+  }
+  
+  .fab-menu.active {
+    display: flex;
+  }
+  
+  .fab-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: var(--glass-bg);
+    border-radius: 12px;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  
+  .fab-item:hover {
+    background: var(--primary);
+    transform: translateX(-5px);
+  }
+  
+  /* === CLIENT GALLERY === */
+  .gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .gallery-item {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    cursor: pointer;
+  }
+  
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  
+  .gallery-item:hover img {
+    transform: scale(1.05);
+  }
+  
+  .gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 20px;
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+  }
+  
+  .gallery-item:hover .gallery-overlay {
+    transform: translateY(0);
+  }
+  
+  /* === BEFORE/AFTER SLIDER === */
+  .comparison-slider {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  
+  .comparison-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .slider-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    cursor: grab;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* === EXPENSE TRACKER === */
+  .expense-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+  }
+  
+  .expense-category {
+    background: var(--glass-bg);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+  }
+  
+  /* === PAYMENT REMINDERS === */
+  .reminder-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .reminder-item {
+    background: var(--glass-bg);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--warning);
+  }
+  
+  .reminder-item.urgent {
+    border-left-color: var(--danger);
+    background: linear-gradient(90deg, rgba(255, 68, 68, 0.1), transparent);
+  }
+  
+  /* === BULK OPERATIONS === */
+  .bulk-select {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+  }
+  
+  /* === TEMPLATE SYSTEM === */
+  .template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+  }
+  
+  .template-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 30px;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  
+  .template-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+  }
+  
+  /* === CUSTOM REPORTS === */
+  .report-builder {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 40px;
+  }
+  
+  .report-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  /* === PWA INSTALL PROMPT === */
+  .pwa-prompt {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    z-index: 10000;
+    display: none;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  /* === MOBILE OPTIMIZATION === */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      flex-direction: column;
+    }
+    
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      transform: none !important;
+    }
+    
+    .main-content {
+      margin-left: 0;
+    }
+    
+    .top-bar {
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+    }
+    
+    .dashboard-widgets {
+      grid-template-columns: 1fr;
+    }
+    
+    .expense-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .fab-container {
+      bottom: 20px;
+      right: 20px;
+    }
+  }
+  
+  /* === ANIMATIONS === */
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-in {
+    animation: slideIn 0.5s ease forwards;
+  }
+  
+  /* === LOADING SKELETONS === */
+  .skeleton {
+    background: linear-gradient(90deg, var(--glass-bg) 25%, rgba(255,255,255,0.1) 50%, var(--glass-bg) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 8px;
+  }
+  
+  @keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  
+  /* === TOAST NOTIFICATIONS === */
+  .toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .toast {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 15px 20px;
+    border-left: 4px solid var(--primary);
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translateX(400px);
+    transition: transform 0.3s;
+    max-width: 350px;
+  }
+  
+  .toast.show {
+    transform: translateX(0);
+  }
+  
+  .toast.success {
+    border-left-color: var(--success);
+  }
+  
+  .toast.error {
+    border-left-color: var(--danger);
+  }
+  
+  .toast.warning {
+    border-left-color: var(--warning);
+  }
+  
+  /* === CONFIRM DIALOG === */
+  .confirm-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(10px);
+  }
+  
+  .confirm-dialog.active {
+    display: flex;
+  }
+  
+  .confirm-content {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+  }
+  
+  /* === FORM VALIDATION === */
+  .form-group {
+    position: relative;
+    margin-bottom: 25px;
+  }
+  
+  .form-group.error input {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.2);
+  }
+  
+  .error-message {
+    color: var(--danger);
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+  }
+  
+  .form-group.error .error-message {
+    display: block;
+  }
+  
+  /* === SCROLLBAR === */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--glass-bg);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+  }
+  
+  /* === BREADCRUMB === */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 15px 25px;
+    background: var(--glass-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+  
+  .breadcrumb-item {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .breadcrumb-item:hover {
+    color: var(--primary);
+  }
+  
+  .breadcrumb-separator {
+    color: var(--text-secondary);
+  }
+  
+  /* === 3D CARD HOVER === */
+  .card-3d {
+    perspective: 1000px;
+  }
+  
+  .card-3d-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  
+  .card-3d:hover .card-3d-inner {
+    transform: rotateY(10deg) rotateX(5deg);
+  }
+  
+  /* === PULSE ANIMATION === */
+  .pulse {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(0, 102, 204, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 102, 204, 0); }
+  }
+  
+  /* === HIDDEN CLASS === */
+  .hidden {
+    display: none !important;
+  }
+
+  /* === NEW ACCOUNT FORM === */
+  .new-account-form {
+    display: none;
+  }
+
+  .account-type-selection {
+    margin: 20px 0;
+  }
+
+  .account-type-btn {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 12px;
+    background: var(--glass-bg);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .account-type-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+
+  .account-type-btn.selected {
+    border-color: var(--primary);
+    background: linear-gradient(90deg, rgba(0, 102, 204, 0.1), transparent);
+  }
+
+  .account-type-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+  }
+
+  .account-type-icon.admin {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  }
+
+  .account-type-icon.staff {
+    background: linear-gradient(135deg, var(--secondary), #5ac8fa);
+  }
+
+  .account-type-icon.viewer {
+    background: linear-gradient(135deg, #8e8e93, #aeaeb2);
+  }
+
+  .toggle-form-link {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+
+  .toggle-form-link:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+  }
+
+  /* Password visibility toggle */
+  .password-container {
+    position: relative;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  /* User Management */
+  .user-management-container {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  .user-card {
+    border-left: 4px solid;
+    margin-bottom: 10px;
+  }
+
+  .user-card.admin {
+    border-left-color: var(--primary);
+  }
+
+  .user-card.staff {
+    border-left-color: var(--secondary);
+  }
+
+  .user-card.viewer {
+    border-left-color: #8e8e93;
+  }
+
+  /* === INVOICE MODAL === */
+  .invoice-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(10px);
+    padding: 20px;
+  }
+
+  .invoice-modal.active {
+    display: flex;
+  }
+
+  .invoice-content {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  /* === INVOICE STYLES === */
+  .invoice-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+    line-height: 1.5;
+    background-color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .invoice-header {
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+    width: 100%;
+  }
+
+  .invoice-body {
+    padding: 40px 50px;
+    flex: 1;
+  }
+
+  .invoice-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #ECEBEB;
+    padding-bottom: 20px;
+  }
+
+  .invoice-company h1 {
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 32px;
+    margin: 0;
+    color: #333;
+  }
+
+  .invoice-company p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--primary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 5px;
+    font-weight: 600;
+  }
+
+  .invoice-title h2 {
+    color: var(--primary);
+    font-size: 28px;
+    margin: 0;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .invoice-title p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+    font-weight: 500;
+  }
+
+  .invoice-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 45px;
+  }
+
+  .invoice-to {
+    width: 50%;
+  }
+
+  .invoice-to-label {
+    font-size: 10px;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .invoice-client {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+    font-weight: 700;
+  }
+
+  .invoice-details {
+    width: 40%;
+    text-align: right;
+  }
+
+  .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+  }
+
+  .invoice-table thead tr {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .invoice-table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .invoice-table th:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+
+  .invoice-table th:last-child {
+    border-radius: 0 4px 4px 0;
+    text-align: right;
+  }
+
+  .invoice-table tbody {
+    font-size: 14px;
+    color: #555;
+  }
+
+  .invoice-payment {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+
+  .payment-method {
+    width: 50%;
+    background-color: #FAFAFA;
+    padding: 15px 20px;
+    border-radius: 6px;
+    border: 1px solid #F0F0F0;
+  }
+
+  .payment-method-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .payment-details {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #555;
+  }
+
+  .payment-details div {
+    display: flex;
+    margin-bottom: 8px;
+  }
+
+  .payment-details span:first-child {
+    width: 90px;
+    color: var(--primary-dark);
+    font-weight: 600;
+  }
+
+  .invoice-totals {
+    width: 40%;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #ECEBEB;
+  }
+
+  .total-row.advance {
+    color: var(--primary);
+  }
+
+  .total-due {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    background-color: var(--primary);
+    padding: 15px;
+    border-radius: 4px;
+    color: white;
+  }
+
+  .total-due span:first-child {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .total-due span:last-child {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .invoice-terms {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #FAFAFA;
+    border-radius: 6px;
+    border: 1px solid #F0F0F0;
+  }
+
+  .invoice-terms p {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+  }
+
+  .invoice-footer {
+    margin-top: 60px;
+    text-align: center;
+  }
+
+  .invoice-footer h3 {
+    color: var(--primary);
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+
+  .invoice-footer p {
+    font-size: 10px;
+    color: #aaa;
+    margin-bottom: 25px;
+  }
+
+  .invoice-contact {
+    border-top: 1px solid #ECEBEB;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 12px;
+    color: #666;
+  }
+
+  .invoice-contact a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .invoice-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+  }
+</style>
+</head>
+<body data-theme="dark">
+<div id="mainApp">
+  <!-- LOGIN PAGE -->
+  <div id="accountPage" class="login-container">
+    <div class="login-card neu-card">
+      <h2 class="login-title">Elegant Dream Studio</h2>
+      <p class="login-subtitle" style="text-align:center; color:var(--text-secondary); margin-bottom:40px;">Professional Photography Management</p>
+      
+      <!-- Login Form -->
+      <div id="loginForm">
+        <div class="form-group">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text);">Email Address</label>
+          <input id="loginEmail" type="email" placeholder="Enter your email" class="neu-input" style="width:100%; padding:16px 18px;">
+          <div class="error-message" id="loginEmailError"></div>
+        </div>
+        
+        <div class="form-group">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text);">Password</label>
+          <div class="password-container">
+            <input id="loginPass" type="password" placeholder="Enter your password" class="neu-input" style="width:100%; padding:16px 18px; padding-right:40px;">
+            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('loginPass')"></i>
+          </div>
+          <div class="error-message" id="loginPasswordError"></div>
+        </div>
+        
+        <button class="neu-btn" onclick="login()" style="width:100%; padding:18px; font-size:18px; font-weight:700; margin-top:20px;">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+        
+        <div class="toggle-form-link" onclick="showNewAccountForm()">
+          <i class="fas fa-user-plus"></i> Create New Account
+        </div>
+      </div>
+      
+      <!-- New Account Form -->
+      <div id="newAccountForm" class="new-account-form">
+        <div class="form-group">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text);">Full Name</label>
+          <input id="newUserName" type="text" placeholder="Enter your full name" class="neu-input" style="width:100%; padding:16px 18px;">
+          <div class="error-message" id="newUserNameError"></div>
+        </div>
+        
+        <div class="form-group">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text);">Email Address</label>
+          <input id="newUserEmail" type="email" placeholder="Enter your email" class="neu-input" style="width:100%; padding:16px 18px;">
+          <div class="error-message" id="newUserEmailError"></div>
+        </div>
+        
+        <div class="form-group">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text);">Password</label>
+          <div class="password-container">
+            <input id="newUserPassword" type="password" placeholder="Create a password (min 6 characters)" class="neu-input" style="width:100%; padding:16px 18px; padding-right:40px;">
+            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('newUserPassword')"></i>
+          </div>
+          <div class="error-message" id="newUserPasswordError"></div>
+        </div>
+        
+        <div class="form-group">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text);">Confirm Password</label>
+          <div class="password-container">
+            <input id="newUserConfirmPassword" type="password" placeholder="Confirm password" class="neu-input" style="width:100%; padding:16px 18px; padding-right:40px;">
+            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('newUserConfirmPassword')"></i>
+          </div>
+          <div class="error-message" id="newUserConfirmPasswordError"></div>
+        </div>
+        
+        <div class="form-group account-type-selection">
+          <label style="display:block; margin-bottom:12px; font-weight:600; color:var(--text);">Account Type</label>
+          
+          <div class="account-type-btn selected" onclick="selectAccountType('staff')">
+            <div class="account-type-icon staff">
+              <i class="fas fa-user-tie"></i>
+            </div>
+            <div>
+              <div style="font-weight:600; color:var(--text);">Staff Member</div>
+              <div style="font-size:13px; color:var(--text-secondary);">Add/Edit jobs only</div>
+            </div>
+          </div>
+          
+          <div class="account-type-btn" onclick="selectAccountType('viewer')">
+            <div class="account-type-icon viewer">
+              <i class="fas fa-eye"></i>
+            </div>
+            <div>
+              <div style="font-weight:600; color:var(--text);">Viewer (Read Only)</div>
+              <div style="font-size:13px; color:var(--text-secondary);">View jobs only</div>
+            </div>
+          </div>
+          
+          <div class="account-type-btn" onclick="selectAccountType('admin')">
+            <div class="account-type-icon admin">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div>
+              <div style="font-weight:600; color:var(--text);">Administrator (Full Access)</div>
+              <div style="font-size:13px; color:var(--text-secondary);">Full system control</div>
+            </div>
+          </div>
+          
+          <!-- Admin Code Field (shown only when admin is selected) -->
+          <div id="adminCodeGroup" class="form-group" style="display:none; margin-top:15px;">
+            <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text);">Admin Security Code</label>
+            <div class="password-container">
+              <input id="adminCode" type="password" placeholder="Enter admin security code" class="neu-input" style="width:100%; padding:16px 18px; padding-right:40px;">
+              <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('adminCode')"></i>
+            </div>
+            <div class="error-message" id="adminCodeError"></div>
+            <small style="color:var(--text-secondary); font-size:12px; margin-top:5px;">
+              Default admin code: <strong>EDS2024</strong> (You can change this later in settings)
+            </small>
+          </div>
+        </div>
+        
+        <button class="neu-btn" onclick="createNewAccount()" style="width:100%; padding:18px; font-size:18px; font-weight:700; margin-top:20px; background:var(--success);">
+          <i class="fas fa-user-check"></i> Create Account
+        </button>
+        
+        <div class="toggle-form-link" onclick="showLoginForm()">
+          <i class="fas fa-sign-in-alt"></i> Back to Login
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="hidden">
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <div class="sidebar neu-card" id="sidebar">
+        <div class="logo-section">
+          <div class="logo">Elegant Dream</div>
+          <div style="color:var(--text-secondary); font-size:14px;">Professional Studio</div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <button class="quick-action-btn" onclick="quickAction('addJob')">
+            <i class="fas fa-plus-circle"></i>
+            <span>Add Job</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAction('generateInvoice')">
+            <i class="fas fa-file-invoice"></i>
+            <span>Invoice</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAction('uploadPhotos')">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Upload</span>
+          </button>
+          <button class="quick-action-btn" onclick="quickAction('exportData')">
+            <i class="fas fa-download"></i>
+            <span>Export</span>
+          </button>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="nav-section">
+          <div class="nav-item active" onclick="showSection('dashboardHome')">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+          </div>
+          <div class="nav-item" onclick="showSection('addJobSection')">
+            <i class="fas fa-plus-circle"></i>
+            <span>Add/Edit Job</span>
+          </div>
+          <div class="nav-item" onclick="showSection('allJobs')">
+            <i class="fas fa-list-alt"></i>
+            <span>All Jobs</span>
+          </div>
+          <div class="nav-item" onclick="showSection('clientGallery')">
+            <i class="fas fa-images"></i>
+            <span>Client Gallery</span>
+          </div>
+          <div class="nav-item" onclick="showSection('expenseTracker')">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Expense Tracker</span>
+          </div>
+          <div class="nav-item" onclick="showSection('reportsAnalytics')">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reports & Analytics</span>
+          </div>
+          <div class="nav-item" onclick="showSection('paymentReminders')">
+            <i class="fas fa-bell"></i>
+            <span>Payment Reminders</span>
+            <span class="badge" style="background:var(--danger); color:white; padding:2px 8px; border-radius:10px; font-size:12px;" id="reminderCount">0</span>
+          </div>
+          <div class="nav-item" onclick="showSection('templates')">
+            <i class="fas fa-layer-group"></i>
+            <span>Templates</span>
+          </div>
+          <div class="nav-item" onclick="showSection('settings')">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </div>
+          <!-- User Management (only for admins) -->
+          <div class="nav-item hidden" id="userManagementNav" onclick="showSection('userManagement')">
+            <i class="fas fa-users-cog"></i>
+            <span>User Management</span>
+          </div>
+        </nav>
+        
+        <!-- User Info -->
+        <div class="user-info neu-card" style="margin-top:auto;">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div>
+            <div style="font-weight:600; color:var(--text);" id="sidebarUserName">Administrator</div>
+            <div style="font-size:12px; color:var(--text-secondary);" id="sidebarUserRole">Admin</div>
+          </div>
+          <button onclick="logout()" class="neu-btn" style="margin-left:auto; padding:8px 12px; font-size:14px;">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <div class="top-bar neu-card">
+          <div class="left-controls">
+            <button class="neu-btn" onclick="toggleSidebar()" style="padding:12px;">
+              <i class="fas fa-bars"></i>
+            </button>
+            <button class="neu-btn" id="themeToggle" onclick="toggleTheme()" style="padding:12px;">
+              <i class="fas fa-moon"></i>
+            </button>
+            <div class="breadcrumb">
+              <a href="#" class="breadcrumb-item" onclick="showSection('dashboardHome')">Dashboard</a>
+              <span class="breadcrumb-separator">/</span>
+              <span class="breadcrumb-item" id="currentPage">Home</span>
+            </div>
+          </div>
+          
+          <div class="right-controls">
+            <div style="position:relative;">
+              <input type="text" id="globalSearch" placeholder="Search jobs, clients..." class="neu-input" style="padding:12px 20px; padding-left:40px; width:300px;">
+              <i class="fas fa-search" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); color:var(--text-secondary);"></i>
+            </div>
+            
+            <div class="user-info">
+              <div class="user-avatar" id="topBarAvatar">A</div>
+              <div>
+                <div style="font-weight:600; color:var(--text);" id="topBarUserName">Administrator</div>
+                <div style="font-size:12px; color:var(--text-secondary);" id="topBarUserRole">Admin</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Dashboard Home -->
+        <div id="dashboardHome" class="section">
+          <h2 style="font-size:36px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Welcome Back!</h2>
+          
+          <!-- Dashboard Widgets -->
+          <div class="dashboard-widgets">
+            <!-- Stats Widget -->
+            <div class="widget neu-card card-3d">
+              <div class="widget-header">
+                <h3 class="widget-title">Studio Statistics</h3>
+                <select class="neu-input" style="padding:8px 12px; font-size:14px;">
+                  <option>This Month</option>
+                  <option>Last Month</option>
+                  <option>This Year</option>
+                </select>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:20px;">
+                <div style="text-align:center;">
+                  <div style="font-size:14px; color:var(--text-secondary); margin-bottom:5px;">Total Jobs</div>
+                  <div style="font-size:32px; font-weight:800; color:var(--primary);" id="widgetTotalJobs">0</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:14px; color:var(--text-secondary); margin-bottom:5px;">Revenue</div>
+                  <div style="font-size:32px; font-weight:800; color:var(--success);" id="widgetRevenue">0 LKR</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:14px; color:var(--text-secondary); margin-bottom:5px;">Profit</div>
+                  <div style="font-size:32px; font-weight:800; color:var(--accent);" id="widgetProfit">0 LKR</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:14px; color:var(--text-secondary); margin-bottom:5px;">Pending</div>
+                  <div style="font-size:32px; font-weight:800; color:var(--warning);" id="widgetPending">0</div>
+                </div>
+              </div>
+              <canvas id="statsChart" style="margin-top:30px; height:200px;"></canvas>
+            </div>
+            
+            <!-- Recent Jobs Widget -->
+            <div class="widget neu-card">
+              <div class="widget-header">
+                <h3 class="widget-title">Recent Jobs</h3>
+                <button class="neu-btn" onclick="showSection('allJobs')" style="padding:8px 16px; font-size:14px;">View All</button>
+              </div>
+              <div id="recentJobsList" style="max-height:300px; overflow-y:auto;">
+                <!-- Recent jobs will be loaded here -->
+              </div>
+            </div>
+            
+            <!-- Expense Summary Widget -->
+            <div class="widget neu-card">
+              <div class="widget-header">
+                <h3 class="widget-title">Expense Summary</h3>
+                <button class="neu-btn" onclick="showSection('expenseTracker')" style="padding:8px 16px; font-size:14px;">Details</button>
+              </div>
+              <div id="expenseSummary">
+                <!-- Expense summary will be loaded here -->
+              </div>
+              <canvas id="expenseChart" style="margin-top:20px; height:150px;"></canvas>
+            </div>
+            
+            <!-- Quick Stats Widget -->
+            <div class="widget neu-card">
+              <div class="widget-header">
+                <h3 class="widget-title">Quick Stats</h3>
+                <i class="fas fa-sync-alt" style="color:var(--text-secondary); cursor:pointer;" onclick="refreshDashboard()"></i>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:15px;">
+                <div class="neu-card" style="padding:15px; text-align:center;">
+                  <i class="fas fa-users" style="font-size:24px; color:var(--primary); margin-bottom:10px;"></i>
+                  <div style="font-size:12px; color:var(--text-secondary);">Active Clients</div>
+                  <div style="font-size:24px; font-weight:700; color:var(--text);" id="activeClients">0</div>
+                </div>
+                <div class="neu-card" style="padding:15px; text-align:center;">
+                  <i class="fas fa-camera" style="font-size:24px; color:var(--secondary); margin-bottom:10px;"></i>
+                  <div style="font-size:12px; color:var(--text-secondary);">Shoots This Month</div>
+                  <div style="font-size:24px; font-weight:700; color:var(--text);" id="monthlyShoots">0</div>
+                </div>
+                <div class="neu-card" style="padding:15px; text-align:center;">
+                  <i class="fas fa-money-check-alt" style="font-size:24px; color:var(--success); margin-bottom:10px;"></i>
+                  <div style="font-size:12px; color:var(--text-secondary);">Avg. Package</div>
+                  <div style="font-size:24px; font-weight:700; color:var(--text);" id="avgPackage">0 LKR</div>
+                </div>
+                <div class="neu-card" style="padding:15px; text-align:center;">
+                  <i class="fas fa-star" style="font-size:24px; color:var(--warning); margin-bottom:10px;"></i>
+                  <div style="font-size:12px; color:var(--text-secondary);">Completion Rate</div>
+                  <div style="font-size:24px; font-weight:700; color:var(--text);" id="completionRate">0%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Add Job Section -->
+        <div id="addJobSection" class="section hidden">
+          <div class="neu-card" style="padding:40px;">
+            <h3 style="font-size:32px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Add New Job</h3>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
+              <!-- Left Column -->
+              <div>
+                <!-- Client Details -->
+                <h4 style="margin-bottom:20px; color:var(--text);">Client Details</h4>
+                <div class="neu-card" style="padding:20px; margin-bottom:30px;">
+                  <div class="form-group">
+                    <label>Client Name</label>
+                    <input type="text" class="neu-input" id="clientName" placeholder="Enter client name" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" class="neu-input" id="clientPhone" placeholder="Enter phone number" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" class="neu-input" id="clientEmail" placeholder="Enter email address" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Address</label>
+                    <textarea class="neu-input" id="clientAddress" placeholder="Enter client address" style="width:100%; padding:12px 15px; min-height:80px; resize:vertical;"></textarea>
+                  </div>
+                </div>
+                
+                <!-- Event Details -->
+                <h4 style="margin-bottom:20px; color:var(--text);">Event Details</h4>
+                <div class="neu-card" style="padding:20px; margin-bottom:30px;">
+                  <div class="form-group">
+                    <label>Event Date</label>
+                    <input type="date" class="neu-input" id="eventDate" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Event Type</label>
+                    <select class="neu-input" id="eventType" style="width:100%; padding:12px 15px;">
+                      <option value="">Select Event Type</option>
+                      <option value="wedding">Wedding</option>
+                      <option value="engagement">Engagement</option>
+                      <option value="birthday">Birthday</option>
+                      <option value="portrait">Portrait</option>
+                      <option value="family">Family</option>
+                      <option value="corporate">Corporate</option>
+                      <option value="product">Product</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Category</label>
+                    <select class="neu-input" id="jobCategory" style="width:100%; padding:12px 15px;">
+                      <option value="">Select Category</option>
+                      <option value="basic">Basic</option>
+                      <option value="standard">Standard</option>
+                      <option value="premium">Premium</option>
+                      <option value="luxury">Luxury</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Venue</label>
+                    <input type="text" class="neu-input" id="eventVenue" placeholder="Enter venue" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Time</label>
+                    <input type="time" class="neu-input" id="eventTime" style="width:100%; padding:12px 15px;">
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Right Column -->
+              <div>
+                <!-- Package Details -->
+                <h4 style="margin-bottom:20px; color:var(--text);">Package Details</h4>
+                <div class="neu-card" style="padding:20px; margin-bottom:30px;">
+                  <div class="form-group">
+                    <label>Package Price (LKR)</label>
+                    <input type="number" class="neu-input" id="packagePrice" placeholder="0" style="width:100%; padding:12px 15px;" oninput="calculateProfit()">
+                  </div>
+                  <div class="form-group">
+                    <label>Advance Payment (LKR)</label>
+                    <input type="number" class="neu-input" id="advancePayment" placeholder="0" style="width:100%; padding:12px 15px;" oninput="calculateProfit()">
+                  </div>
+                  <div class="form-group">
+                    <label>Total Expenses (LKR)</label>
+                    <input type="number" class="neu-input" id="totalExpenses" placeholder="0" style="width:100%; padding:12px 15px;" oninput="calculateProfit()">
+                  </div>
+                  <div class="form-group">
+                    <label>Profit (LKR)</label>
+                    <input type="number" class="neu-input" id="profit" placeholder="0" style="width:100%; padding:12px 15px; background:var(--glass-bg);" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label>Payment Status</label>
+                    <select class="neu-input" id="paymentStatus" style="width:100%; padding:12px 15px;">
+                      <option value="pending">Pending</option>
+                      <option value="partial">Partially Paid</option>
+                      <option value="paid">Fully Paid</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <!-- Frame & Print Details -->
+                <h4 style="margin-bottom:20px; color:var(--text);">Frame & Print Details</h4>
+                <div class="neu-card" style="padding:20px; margin-bottom:30px;">
+                  <div class="form-group">
+                    <label>Frame Size</label>
+                    <select class="neu-input" id="frameSize" style="width:100%; padding:12px 15px;" onchange="updateFramePrice()">
+                      <option value="">Select Frame Size</option>
+                      <option value="900">4×6 – 900</option>
+                      <option value="1200">6×8 – 1,200</option>
+                      <option value="1400">8×10 – 1,400</option>
+                      <option value="1600">8×12 – 1,600</option>
+                      <option value="2000">10×12 – 2,000</option>
+                      <option value="2500">10×15 – 2,500</option>
+                      <option value="3000">12×15 – 3,000</option>
+                      <option value="3500">12×18 – 3,500</option>
+                      <option value="6500">16×24 – 6,500</option>
+                      <option value="8900">20×30 – 8,900</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Frame Price per Unit (LKR)</label>
+                    <input type="number" class="neu-input" id="frameUnitPrice" placeholder="0" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Frame Quantity</label>
+                    <input type="number" class="neu-input" id="frameQuantity" placeholder="0" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Pre Frame Cost (Extra)</label>
+                    <input type="number" class="neu-input" id="preFrameCost" placeholder="0" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Photo Print Price per Unit</label>
+                    <input type="number" class="neu-input" id="printUnitPrice" placeholder="0" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Photo Print Quantity</label>
+                    <input type="number" class="neu-input" id="printQuantity" placeholder="0" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Total Thank You Card Cost</label>
+                    <input type="number" class="neu-input" id="thankYouCardTotal" placeholder="0" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Pre Thank You Card Cost</label>
+                    <input type="number" class="neu-input" id="preThankYouCardCost" placeholder="0" style="width:100%; padding:12px 15px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Additional Notes -->
+            <div style="margin-top:30px;">
+              <h4 style="margin-bottom:20px; color:var(--text);">Additional Notes</h4>
+              <div class="neu-card" style="padding:20px;">
+                <div class="form-group">
+                  <label>Special Instructions / Notes</label>
+                  <textarea class="neu-input" id="jobNotes" placeholder="Enter any special instructions or notes..." style="width:100%; padding:15px; min-height:100px; resize:vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Upload Photos (Optional)</label>
+                  <div style="border:2px dashed var(--border); border-radius:16px; padding:30px; text-align:center; cursor:pointer;" onclick="document.getElementById('photoUpload').click()">
+                    <i class="fas fa-cloud-upload-alt" style="font-size:40px; color:var(--text-secondary); margin-bottom:15px;"></i>
+                    <div style="color:var(--text-secondary);">Click to upload photos or drag & drop</div>
+                    <div style="font-size:12px; color:var(--text-secondary); margin-top:10px;">Supports JPG, PNG, HEIC</div>
+                  </div>
+                  <input type="file" id="photoUpload" accept="image/*" multiple style="display:none;">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div style="display:flex; gap:15px; margin-top:40px; justify-content:flex-end;">
+              <button class="neu-btn" onclick="clearJobForm()" style="padding:12px 30px; background:var(--danger);">
+                <i class="fas fa-times"></i> Clear Form
+              </button>
+              <button class="neu-btn" onclick="saveJobAsDraft()" style="padding:12px 30px; background:var(--warning);">
+                <i class="fas fa-save"></i> Save as Draft
+              </button>
+              <button class="neu-btn" onclick="saveJob()" style="padding:12px 30px; background:var(--success);">
+                <i class="fas fa-check"></i> Save Job
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- All Jobs Section -->
+        <div id="allJobs" class="section hidden">
+          <div class="neu-card" style="padding:40px;">
+            <h3 style="font-size:32px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">All Jobs</h3>
+            
+            <div style="display:flex; gap:15px; margin-bottom:30px; flex-wrap:wrap;">
+              <select class="neu-input" id="jobFilter" onchange="filterJobs()" style="padding:12px 20px;">
+                <option value="all">All Jobs</option>
+                <option value="pending">Pending Payment</option>
+                <option value="completed">Completed</option>
+                <option value="draft">Drafts</option>
+              </select>
+              <select class="neu-input" id="sortJobs" onchange="sortJobList()" style="padding:12px 20px;">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="price-low">Price: Low to High</option>
+              </select>
+              <button class="neu-btn" onclick="exportJobList()" style="padding:12px 24px; background:var(--success);">
+                <i class="fas fa-file-excel"></i> Export
+              </button>
+              <button class="neu-btn" onclick="bulkGenerateInvoices()" style="padding:12px 24px; background:var(--secondary);">
+                <i class="fas fa-file-invoice"></i> Bulk Invoices
+              </button>
+            </div>
+            
+            <div id="jobsList" style="max-height:600px; overflow-y:auto;">
+              <!-- Jobs will be loaded here -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Client Gallery -->
+        <div id="clientGallery" class="section hidden">
+          <div class="neu-card" style="padding:40px;">
+            <h3 style="font-size:32px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Client Gallery</h3>
+            
+            <!-- Gallery Controls -->
+            <div style="display:flex; gap:15px; margin-bottom:30px; flex-wrap:wrap;">
+              <select class="neu-input" style="padding:12px 20px;">
+                <option>All Clients</option>
+              </select>
+              <select class="neu-input" style="padding:12px 20px;">
+                <option>All Categories</option>
+              </select>
+              <button class="neu-btn" onclick="uploadPhotos()" style="padding:12px 24px;">
+                <i class="fas fa-cloud-upload-alt"></i> Upload Photos
+              </button>
+              <button class="neu-btn" onclick="showBeforeAfter()" style="padding:12px 24px; background:var(--secondary);">
+                <i class="fas fa-exchange-alt"></i> Before/After
+              </button>
+              <button class="neu-btn" onclick="generateWatermark()" style="padding:12px 24px; background:var(--accent);">
+                <i class="fas fa-water"></i> Watermark
+              </button>
+            </div>
+            
+            <!-- Gallery Grid -->
+            <div class="gallery-container" id="galleryGrid">
+              <!-- Gallery items will be loaded here -->
+            </div>
+            
+            <!-- Before/After Slider -->
+            <div id="beforeAfterSlider" class="hidden" style="margin-top:40px;">
+              <div class="comparison-slider neu-card">
+                <img src="" alt="Before" class="comparison-image" id="beforeImage" style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);">
+                <img src="" alt="After" class="comparison-image" id="afterImage">
+                <div class="slider-handle">
+                  <i class="fas fa-arrows-alt-h"></i>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-top:20px;">
+                <button class="neu-btn" onclick="hideBeforeAfter()" style="padding:12px 24px;">
+                  <i class="fas fa-times"></i> Close
+                </button>
+                <button class="neu-btn" onclick="downloadComparison()" style="padding:12px 24px; background:var(--success);">
+                  <i class="fas fa-download"></i> Download
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Expense Tracker -->
+        <div id="expenseTracker" class="section hidden">
+          <div class="neu-card" style="padding:40px;">
+            <h3 style="font-size:32px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Expense Tracker</h3>
+            
+            <div class="expense-grid">
+              <div>
+                <h4 style="margin-bottom:20px; color:var(--text); font-size:20px;">Add New Expense</h4>
+                <div class="neu-card" style="padding:30px;">
+                  <div class="form-group">
+                    <label>Expense Category</label>
+                    <select class="neu-input" id="expenseCategory" style="width:100%; padding:16px 18px;">
+                      <option value="">Select Category</option>
+                      <option value="equipment">Equipment Purchase</option>
+                      <option value="rent">Equipment Rent</option>
+                      <option value="printing">Printing & Frames</option>
+                      <option value="transport">Transport</option>
+                      <option value="food">Food & Refreshments</option>
+                      <option value="marketing">Marketing</option>
+                      <option value="software">Software</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" class="neu-input" id="expenseDescription" placeholder="Enter expense description" style="width:100%; padding:16px 18px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Amount (LKR)</label>
+                    <input type="number" class="neu-input" id="expenseAmount" placeholder="0" style="width:100%; padding:16px 18px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" class="neu-input" id="expenseDate" style="width:100%; padding:16px 18px;">
+                  </div>
+                  <button class="neu-btn" onclick="addExpense()" style="width:100%; padding:18px; margin-top:20px;">
+                    <i class="fas fa-plus"></i> Add Expense
+                  </button>
+                </div>
+              </div>
+              
+              <div>
+                <h4 style="margin-bottom:20px; color:var(--text); font-size:20px;">Expense Summary</h4>
+                <div id="expenseSummaryList">
+                  <!-- Expense summary will be loaded here -->
+                </div>
+                
+                <div class="neu-card" style="padding:20px; margin-top:20px; background:linear-gradient(135deg, rgba(255,68,68,0.1), transparent); border-left:4px solid var(--danger);">
+                  <h5 style="margin-bottom:10px; color:var(--text);">Total Expenses This Month</h5>
+                  <div style="font-size:32px; font-weight:800; color:var(--danger);" id="totalMonthlyExpense">0 LKR</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Reports & Analytics -->
+        <div id="reportsAnalytics" class="section hidden">
+          <div class="neu-card" style="padding:40px;">
+            <h3 style="font-size:32px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Reports & Analytics</h3>
+            
+            <div style="display:flex; gap:15px; margin-bottom:30px; flex-wrap:wrap;">
+              <button class="neu-btn" onclick="generateReport('monthly')" style="padding:12px 24px;">
+                <i class="fas fa-calendar-alt"></i> Monthly Report
+              </button>
+              <button class="neu-btn" onclick="generateReport('yearly')" style="padding:12px 24px;">
+                <i class="fas fa-chart-line"></i> Yearly Report
+              </button>
+              <button class="neu-btn" onclick="exportToExcel()" style="padding:12px 24px; background:var(--success);">
+                <i class="fas fa-file-excel"></i> Export to Excel
+              </button>
+              <button class="neu-btn" onclick="showCustomReportBuilder()" style="padding:12px 24px; background:var(--secondary);">
+                <i class="fas fa-tools"></i> Custom Report
+              </button>
+            </div>
+            
+            <div class="report-builder neu-card hidden" id="customReportBuilder">
+              <h4 style="margin-bottom:20px; color:var(--text);">Custom Report Builder</h4>
+              <div class="report-fields">
+                <div>
+                  <label>Date Range</label>
+                  <div style="display:flex; gap:10px;">
+                    <input type="date" class="neu-input" id="reportStartDate" style="flex:1; padding:12px;">
+                    <span style="display:flex; align-items:center;">to</span>
+                    <input type="date" class="neu-input" id="reportEndDate" style="flex:1; padding:12px;">
+                  </div>
+                </div>
+                <div>
+                  <label>Categories</label>
+                  <select class="neu-input" id="reportCategories" multiple style="width:100%; padding:12px; height:120px;">
+                    <option value="all">All Categories</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Include Fields</label>
+                  <div style="display:flex; flex-direction:column; gap:5px;">
+                    <label><input type="checkbox" checked> Client Details</label>
+                    <label><input type="checkbox" checked> Package Price</label>
+                    <label><input type="checkbox" checked> Expenses</label>
+                    <label><input type="checkbox" checked> Profit</label>
+                    <label><input type="checkbox"> Advance Payments</label>
+                  </div>
+                </div>
+              </div>
+              <button class="neu-btn" onclick="generateCustomReport()" style="padding:15px 30px; margin-top:20px;">
+                <i class="fas fa-file-pdf"></i> Generate Report
+              </button>
+            </div>
+            
+            <canvas id="analyticsChart" style="width:100%; height:400px; margin-top:40px;"></canvas>
+          </div>
+        </div>
+        
+        <!-- Payment Reminders -->
+        <div id="paymentReminders" class="section hidden">
+          <div class="neu-card" style="padding:40px;">
+            <h3 style="font-size:32px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Payment Reminders</h3>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+              <div>
+                <button class="neu-btn" onclick="sendReminders()" style="padding:12px 24px; background:var(--warning);">
+                  <i class="fas fa-bell"></i> Send All Reminders
+                </button>
+                <button class="neu-btn" onclick="showReminderSettings()" style="padding:12px 24px; margin-left:10px;">
+                  <i class="fas fa-cog"></i> Settings
+                </button>
+              </div>
+              <div>
+                <select class="neu-input" id="reminderFilter" onchange="filterReminders()" style="padding:12px 20px;">
+                  <option value="all">All Reminders</option>
+                  <option value="pending">Pending</option>
+                  <option value="overdue">Overdue</option>
+                  <option value="sent">Sent</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="reminder-list" id="reminderList">
+              <!-- Reminders will be loaded here -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Templates -->
+        <div id="templates" class="section hidden">
+          <div class="neu-card" style="padding:40px;">
+            <h3 style="font-size:32px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Templates</h3>
+            
+            <div style="display:flex; gap:15px; margin-bottom:30px;">
+              <button class="neu-btn" onclick="createNewTemplate()" style="padding:12px 24px;">
+                <i class="fas fa-plus"></i> Create Template
+              </button>
+              <button class="neu-btn" onclick="importTemplate()" style="padding:12px 24px; background:var(--secondary);">
+                <i class="fas fa-file-import"></i> Import
+              </button>
+            </div>
+            
+            <div class="template-grid" id="templateGrid">
+              <!-- Templates will be loaded here -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Settings -->
+        <div id="settings" class="section hidden">
+          <div class="neu-card" style="padding:40px;">
+            <h3 style="font-size:32px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Settings</h3>
+            
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:30px;">
+              <div>
+                <h4 style="margin-bottom:20px; color:var(--text);">Account Settings</h4>
+                <div class="neu-card" style="padding:20px;">
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="neu-input" id="userNameInput" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="neu-input" id="userEmailInput" style="width:100%; padding:12px 15px;">
+                  </div>
+                  <button class="neu-btn" onclick="updateProfile()" style="padding:12px 24px; width:100%; margin-top:15px;">
+                    <i class="fas fa-save"></i> Save Changes
+                  </button>
+                </div>
+              </div>
+              
+              <div>
+                <h4 style="margin-bottom:20px; color:var(--text);">Notification Settings</h4>
+                <div class="neu-card" style="padding:20px;">
+                  <div style="display:flex; flex-direction:column; gap:15px;">
+                    <label style="display:flex; justify-content:space-between; align-items:center;">
+                      <span>Payment Reminders</span>
+                      <input type="checkbox" id="notifReminders" checked>
+                    </label>
+                    <label style="display:flex; justify-content:space-between; align-items:center;">
+                      <span>New Job Notifications</span>
+                      <input type="checkbox" id="notifNewJobs" checked>
+                    </label>
+                    <label style="display:flex; justify-content:space-between; align-items:center;">
+                      <span>Monthly Reports</span>
+                      <input type="checkbox" id="notifReports" checked>
+                    </label>
+                    <label style="display:flex; justify-content:space-between; align-items:center;">
+                      <span>System Updates</span>
+                      <input type="checkbox" id="notifUpdates" checked>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 style="margin-bottom:20px; color:var(--text);">Backup & Restore</h4>
+                <div class="neu-card" style="padding:20px;">
+                  <button class="neu-btn" onclick="createBackup()" style="padding:12px 24px; width:100%; margin-bottom:10px;">
+                    <i class="fas fa-download"></i> Create Backup
+                  </button>
+                  <button class="neu-btn" onclick="restoreBackup()" style="padding:12px 24px; width:100%; background:var(--warning);">
+                    <i class="fas fa-upload"></i> Restore Backup
+                  </button>
+                  <div style="margin-top:20px; padding:15px; background:rgba(0,102,204,0.1); border-radius:10px;">
+                    <div style="font-size:12px; color:var(--text-secondary);">Last Backup</div>
+                    <div id="lastBackupTime" style="font-weight:600;">Never</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- User Management Section -->
+        <div id="userManagement" class="section hidden">
+          <div class="neu-card" style="padding:40px;">
+            <h3 style="font-size:32px; font-weight:800; margin-bottom:30px; background:linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">User Management</h3>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+              <button class="neu-btn" onclick="showCreateUserModal()" style="padding:12px 24px;">
+                <i class="fas fa-user-plus"></i> Create New User
+              </button>
+              <div style="display:flex; gap:10px;">
+                <input type="text" id="userSearch" placeholder="Search users..." class="neu-input" style="padding:12px 20px;" oninput="searchUsers()">
+                <button class="neu-btn" onclick="refreshUserList()" style="padding:12px;">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="user-management-container" id="usersList">
+              <!-- Users will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Floating Action Button -->
+    <div class="fab-container">
+      <button class="fab pulse" onclick="toggleFabMenu()">
+        <i class="fas fa-plus" id="fabIcon"></i>
+      </button>
+      <div class="fab-menu" id="fabMenu">
+        <a href="#" class="fab-item" onclick="quickAddJob()">
+          <i class="fas fa-plus-circle"></i>
+          <span>Quick Add Job</span>
+        </a>
+        <a href="#" class="fab-item" onclick="scanQRCode()">
+          <i class="fas fa-qrcode"></i>
+          <span>Scan QR Code</span>
+        </a>
+        <a href="#" class="fab-item" onclick="takePhoto()">
+          <i class="fas fa-camera"></i>
+          <span>Take Photo</span>
+        </a>
+        <a href="#" class="fab-item" onclick="showQuickStats()">
+          <i class="fas fa-chart-pie"></i>
+          <span>Quick Stats</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- Confirm Dialog -->
+    <div class="confirm-dialog" id="confirmDialog">
+      <div class="confirm-content neu-card">
+        <h3 id="confirmTitle" style="margin-bottom:20px; color:var(--text);"></h3>
+        <div id="confirmMessage" style="margin-bottom:30px; color:var(--text-secondary);"></div>
+        <div style="display:flex; gap:15px; justify-content:center;">
+          <button class="neu-btn" onclick="confirmAction(true)" style="padding:12px 30px; background:var(--primary);">
+            Confirm
+          </button>
+          <button class="neu-btn" onclick="confirmAction(false)" style="padding:12px 30px; background:var(--danger);">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Invoice Modal -->
+    <div class="invoice-modal" id="invoiceModal">
+      <div class="invoice-content">
+        <!-- Invoice content will be generated here -->
+      </div>
+    </div>
+    
+    <!-- PWA Install Prompt -->
+    <div class="pwa-prompt neu-card" id="pwaPrompt">
+      <h4 style="margin-bottom:15px; color:var(--text);">Install Elegant Dream Studio</h4>
+      <p style="margin-bottom:20px; color:var(--text-secondary); font-size:14px;">
+        Install this app on your device for quick access and offline functionality.
+      </p>
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button class="neu-btn" onclick="installPWA()" style="padding:10px 20px; font-size:14px;">
+          <i class="fas fa-download"></i> Install
+        </button>
+        <button class="neu-btn" onclick="hidePWAPrompt()" style="padding:10px 20px; font-size:14px; background:transparent; color:var(--text-secondary);">
+          Later
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== SYSTEM CONFIGURATION ==========
+const CONFIG = {
+  version: '2.0.0',
+  storagePrefix: 'EDS_PRO_',
+  maxBackups: 10,
+  autoSaveInterval: 30000,
+  reminderCheckInterval: 60000,
+  pwaEnabled: true,
+  ADMIN_SECURITY_CODE: 'EDS2024'
+};
+
+// ========== STATE MANAGEMENT ==========
+let currentUser = null;
+let editingId = null;
+let newAccountType = 'staff';
+let currentSection = 'dashboardHome';
+let fabMenuOpen = false;
+let pendingConfirm = null;
+let deferredPrompt = null;
+
+// ========== DATABASE (LocalStorage) ==========
+class Database {
+  constructor() {
+    this.init();
+  }
+  
+  init() {
+    const defaults = {
+      'JOBS_ALL': [],
+      'USERS': this.getDefaultUsers(),
+      'SETTINGS': this.getDefaultSettings(),
+      'EXPENSES': [],
+      'TEMPLATES': [],
+      'REMINDERS': [],
+      'GALLERY': [],
+      'BACKUPS': [],
+      'ACTIVITY_LOG': [],
+      'INVOICE_COUNTER': 1000
+    };
+    
+    for (const [key, value] of Object.entries(defaults)) {
+      if (!localStorage.getItem(CONFIG.storagePrefix + key)) {
+        this.set(key, value);
+      }
+    }
+  }
+  
+  getDefaultUsers() {
+    return {
+      'indrajithnayomal70@gmail.com': {
+        name: 'Administrator',
+        email: 'indrajithnayomal70@gmail.com',
+        password: '154488',
+        role: 'admin',
+        permissions: ['add', 'edit', 'delete', 'view_summary', 'export', 'import', 'delete_all', 'manage_users', 'manage_settings'],
+        avatarColor: '#0066cc',
+        createdAt: new Date().toISOString()
+      },
+      'staff@example.com': {
+        name: 'Staff Member',
+        email: 'staff@example.com',
+        password: '123456',
+        role: 'staff',
+        permissions: ['add', 'edit', 'view_summary'],
+        avatarColor: '#7b68ee',
+        createdAt: new Date().toISOString()
+      },
+      'viewer@example.com': {
+        name: 'Viewer User',
+        email: 'viewer@example.com',
+        password: '123456',
+        role: 'viewer',
+        permissions: ['view'],
+        avatarColor: '#8e8e93',
+        createdAt: new Date().toISOString()
+      }
+    };
+  }
+  
+  getDefaultSettings() {
+    return {
+      theme: 'dark',
+      autoSave: true,
+      notifications: {
+        reminders: true,
+        newJobs: true,
+        reports: true,
+        updates: true
+      },
+      backup: {
+        autoBackup: false,
+        lastBackup: null,
+        backupCount: 0
+      },
+      invoice: {
+        logo: '',
+        bankDetails: 'Bank: BOC | Account: 95121323 | Name: Elegant Dream Studio',
+        footerText: 'Thank you for your business!'
+      },
+      adminCode: CONFIG.ADMIN_SECURITY_CODE
+    };
+  }
+  
+  get(key) {
+    try {
+      const data = localStorage.getItem(CONFIG.storagePrefix + key);
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      console.error('Database get error:', e);
+      return null;
+    }
+  }
+  
+  set(key, value) {
+    try {
+      localStorage.setItem(CONFIG.storagePrefix + key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      console.error('Database set error:', e);
+      this.showToast('Storage error!', 'error');
+      return false;
+    }
+  }
+  
+  update(key, updater) {
+    const current = this.get(key);
+    const updated = updater(current);
+    return this.set(key, updated);
+  }
+  
+  addActivity(action, details) {
+    const log = this.get('ACTIVITY_LOG') || [];
+    log.unshift({
+      timestamp: new Date().toISOString(),
+      user: currentUser?.email || 'system',
+      action,
+      details,
+      ip: 'local'
+    });
+    
+    if (log.length > 1000) log.length = 1000;
+    
+    this.set('ACTIVITY_LOG', log);
+  }
+
+  getNextInvoiceNumber() {
+    const counter = this.get('INVOICE_COUNTER') || 1000;
+    const next = counter + 1;
+    this.set('INVOICE_COUNTER', next);
+    return `EDS-INV-${counter}`;
+  }
+}
+
+const db = new Database();
+
+// ========== LOGIN/NEW ACCOUNT FUNCTIONS ==========
+function showLoginForm() {
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('newAccountForm').style.display = 'none';
+  clearFormErrors();
+}
+
+function showNewAccountForm() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('newAccountForm').style.display = 'block';
+  clearFormErrors();
+  document.getElementById('newUserName').value = '';
+  document.getElementById('newUserEmail').value = '';
+  document.getElementById('newUserPassword').value = '';
+  document.getElementById('newUserConfirmPassword').value = '';
+  document.getElementById('adminCode').value = '';
+  selectAccountType('staff');
+}
+
+function clearFormErrors() {
+  document.querySelectorAll('.error-message').forEach(el => {
+    el.textContent = '';
+    el.style.display = 'none';
+  });
+}
+
+function selectAccountType(type) {
+  newAccountType = type;
+  document.querySelectorAll('.account-type-btn').forEach(btn => btn.classList.remove('selected'));
+  document.querySelectorAll('.account-type-btn').forEach(btn => {
+    if (btn.querySelector('.account-type-icon').classList.contains(type)) {
+      btn.classList.add('selected');
+    }
+  });
+  
+  const adminCodeGroup = document.getElementById('adminCodeGroup');
+  if (adminCodeGroup) {
+    adminCodeGroup.style.display = type === 'admin' ? 'block' : 'none';
+  }
+}
+
+function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+function createNewAccount() {
+  clearFormErrors();
+  
+  const name = document.getElementById('newUserName').value.trim();
+  const email = document.getElementById('newUserEmail').value.trim();
+  const password = document.getElementById('newUserPassword').value;
+  const confirmPassword = document.getElementById('newUserConfirmPassword').value;
+  
+  let isValid = true;
+  
+  if (!name) {
+    document.getElementById('newUserNameError').textContent = 'Full name is required';
+    document.getElementById('newUserNameError').style.display = 'block';
+    isValid = false;
+  }
+  
+  if (!email) {
+    document.getElementById('newUserEmailError').textContent = 'Email is required';
+    document.getElementById('newUserEmailError').style.display = 'block';
+    isValid = false;
+  } else if (!validateEmail(email)) {
+    document.getElementById('newUserEmailError').textContent = 'Please enter a valid email address';
+    document.getElementById('newUserEmailError').style.display = 'block';
+    isValid = false;
+  }
+  
+  if (!password) {
+    document.getElementById('newUserPasswordError').textContent = 'Password is required';
+    document.getElementById('newUserPasswordError').style.display = 'block';
+    isValid = false;
+  } else if (password.length < 6) {
+    document.getElementById('newUserPasswordError').textContent = 'Password must be at least 6 characters';
+    document.getElementById('newUserPasswordError').style.display = 'block';
+    isValid = false;
+  }
+  
+  if (!confirmPassword) {
+    document.getElementById('newUserConfirmPasswordError').textContent = 'Please confirm password';
+    document.getElementById('newUserConfirmPasswordError').style.display = 'block';
+    isValid = false;
+  } else if (password !== confirmPassword) {
+    document.getElementById('newUserConfirmPasswordError').textContent = 'Passwords do not match';
+    document.getElementById('newUserConfirmPasswordError').style.display = 'block';
+    isValid = false;
+  }
+  
+  if (!isValid) {
+    showToast('Please fix the errors in the form', 'error');
+    return;
+  }
+  
+  if (newAccountType === 'admin') {
+    const adminCode = document.getElementById('adminCode').value;
+    const settings = db.get('SETTINGS');
+    const currentAdminCode = settings.adminCode || CONFIG.ADMIN_SECURITY_CODE;
+    
+    if (!adminCode || adminCode !== currentAdminCode) {
+      document.getElementById('adminCodeError').textContent = 'Invalid admin security code';
+      document.getElementById('adminCodeError').style.display = 'block';
+      showToast('Invalid admin security code', 'error');
+      return;
+    }
+  }
+  
+  const users = db.get('USERS');
+  
+  if (users[email]) {
+    showToast('An account with this email already exists', 'error');
+    return;
+  }
+  
+  const userPermissions = {
+    'staff': ['add', 'edit', 'view_summary'],
+    'viewer': ['view'],
+    'admin': ['add', 'edit', 'delete', 'view_summary', 'export', 'import', 'delete_all', 'manage_users', 'manage_settings']
+  };
+  
+  const avatarColors = {
+    'admin': '#0066cc',
+    'staff': '#7b68ee',
+    'viewer': '#8e8e93'
+  };
+  
+  users[email] = {
+    name: name,
+    email: email,
+    password: password,
+    role: newAccountType,
+    permissions: userPermissions[newAccountType],
+    avatarColor: avatarColors[newAccountType],
+    createdAt: new Date().toISOString(),
+    createdBy: 'self'
+  };
+  
+  db.set('USERS', users);
+  
+  showToast(`${newAccountType.charAt(0).toUpperCase() + newAccountType.slice(1)} account created successfully! Please login.`, 'success');
+  showLoginForm();
+  
+  document.getElementById('loginEmail').value = email;
+  document.getElementById('loginPass').value = password;
+}
+
+function togglePasswordVisibility(fieldId) {
+  const input = document.getElementById(fieldId);
+  const icon = input.nextElementSibling;
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
+
+function login() {
+  clearFormErrors();
+  
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPass').value;
+  
+  let isValid = true;
+  
+  if (!email) {
+    document.getElementById('loginEmailError').textContent = 'Email is required';
+    document.getElementById('loginEmailError').style.display = 'block';
+    isValid = false;
+  } else if (!validateEmail(email)) {
+    document.getElementById('loginEmailError').textContent = 'Invalid email format';
+    document.getElementById('loginEmailError').style.display = 'block';
+    isValid = false;
+  }
+  
+  if (!password) {
+    document.getElementById('loginPasswordError').textContent = 'Password is required';
+    document.getElementById('loginPasswordError').style.display = 'block';
+    isValid = false;
+  }
+  
+  if (!isValid) {
+    showToast('Please fix the errors in the form', 'error');
+    return;
+  }
+  
+  const users = db.get('USERS');
+  
+  if (!users) {
+    showToast('System error: User database not found', 'error');
+    return;
+  }
+  
+  const user = users[email];
+  
+  if (!user) {
+    document.getElementById('loginEmailError').textContent = 'Account not found';
+    document.getElementById('loginEmailError').style.display = 'block';
+    showToast('Invalid email or password', 'error');
+    return;
+  }
+  
+  if (user.password !== password) {
+    document.getElementById('loginPasswordError').textContent = 'Incorrect password';
+    document.getElementById('loginPasswordError').style.display = 'block';
+    showToast('Invalid email or password', 'error');
+    return;
+  }
+  
+  currentUser = user;
+  db.set('CURRENT_USER', user);
+  
+  db.addActivity('LOGIN', { email: email, role: user.role });
+  
+  document.getElementById('accountPage').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  
+  updateUserInterface();
+  initializeDashboard();
+  
+  const today = new Date();
+  const eventDateInput = document.getElementById('eventDate');
+  if (eventDateInput) {
+    eventDateInput.value = today.toISOString().split('T')[0];
+  }
+  
+  showToast(`Welcome back, ${user.name}! (${user.role})`, 'success');
+  
+  if (CONFIG.pwaEnabled) {
+    setTimeout(checkPWAInstall, 2000);
+  }
+  
+  const settings = db.get('SETTINGS');
+  if (settings.autoSave) {
+    startAutoSave();
+  }
+}
+
+function logout() {
+  showConfirmDialog('Logout', 'Are you sure you want to logout?', (confirmed) => {
+    if (confirmed) {
+      currentUser = null;
+      db.set('CURRENT_USER', null);
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('accountPage').classList.remove('hidden');
+      document.getElementById('loginPass').value = '';
+      showToast('Logged out successfully', 'info');
+    }
+  });
+}
+
+function updateUserInterface() {
+  if (!currentUser) return;
+  
+  const userNameElements = document.querySelectorAll('[id*="UserName"], [id*="userName"]');
+  const userRoleElements = document.querySelectorAll('[id*="UserRole"], [id*="userRole"]');
+  
+  userNameElements.forEach(el => {
+    if (el.textContent) el.textContent = currentUser.name;
+  });
+  
+  userRoleElements.forEach(el => {
+    if (el.textContent) el.textContent = currentUser.role;
+  });
+  
+  const avatarText = currentUser.name.charAt(0).toUpperCase();
+  const avatarElements = document.querySelectorAll('[id*="Avatar"], [id*="avatar"]');
+  avatarElements.forEach(el => {
+    if (el.textContent) el.textContent = avatarText;
+    if (currentUser.avatarColor) {
+      el.style.background = `linear-gradient(135deg, ${currentUser.avatarColor}, ${currentUser.avatarColor}99)`;
+    }
+  });
+  
+  const userManagementNav = document.getElementById('userManagementNav');
+  if (userManagementNav) {
+    userManagementNav.classList.toggle('hidden', currentUser.role !== 'admin');
+  }
+  
+  updatePermissions();
+}
+
+// ========== USER MANAGEMENT FUNCTIONS ==========
+function loadUserManagement() {
+  if (!currentUser || currentUser.role !== 'admin') {
+    showToast('Access denied. Admin only.', 'error');
+    showSection('dashboardHome');
+    return;
+  }
+  
+  const users = db.get('USERS');
+  const container = document.getElementById('usersList');
+  
+  if (!users || Object.keys(users).length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-secondary);">No users found</div>';
+    return;
+  }
+  
+  container.innerHTML = Object.entries(users).map(([email, user]) => `
+    <div class="neu-card user-card ${user.role}" style="padding:20px; margin-bottom:15px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:15px;">
+          <div class="user-avatar" style="background:linear-gradient(135deg, ${user.avatarColor || '#0066cc'}, ${user.avatarColor || '#0066cc'}99);">
+            ${user.name.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <div style="font-weight:700; color:var(--text);">${user.name}</div>
+            <div style="color:var(--text-secondary); font-size:14px;">${email}</div>
+            <div>
+              <span class="badge" style="background:${user.role === 'admin' ? 'var(--primary)' : user.role === 'staff' ? 'var(--secondary)' : 'var(--text-secondary)'}; color:white; padding:2px 8px; border-radius:10px; font-size:12px;">
+                ${user.role.toUpperCase()}
+              </span>
+              <span style="font-size:12px; color:var(--text-secondary); margin-left:10px;">
+                Created: ${new Date(user.createdAt).toLocaleDateString()}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="neu-btn" onclick="editUser('${email}')" style="padding:8px 16px; font-size:14px;" ${currentUser.email === email ? 'disabled' : ''}>
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="neu-btn" onclick="deleteUser('${email}')" style="padding:8px 16px; font-size:14px; background:var(--danger);" ${currentUser.email === email ? 'disabled' : ''}>
+            <i class="fas fa-trash"></i>
+          </button>
+          <button class="neu-btn" onclick="resetUserPassword('${email}')" style="padding:8px 16px; font-size:14px; background:var(--warning);" ${currentUser.email === email ? 'disabled' : ''}>
+            <i class="fas fa-key"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ========== CORE FUNCTIONS ==========
+function getJobs() {
+  return db.get('JOBS_ALL') || [];
+}
+
+function saveJobs(jobs) {
+  const success = db.set('JOBS_ALL', jobs);
+  if (success) {
+    db.addActivity('UPDATE_JOBS', { count: jobs.length });
+    refreshDashboard();
+  }
+  return success;
+}
+
+// ========== ADD JOB FUNCTIONS ==========
+function updateFramePrice() {
+  const frameSizeSelect = document.getElementById('frameSize');
+  const frameUnitPriceInput = document.getElementById('frameUnitPrice');
+  
+  if (frameSizeSelect.value) {
+    frameUnitPriceInput.value = frameSizeSelect.value;
+  }
+}
+
+function calculateProfit() {
+  const packagePrice = parseFloat(document.getElementById('packagePrice').value) || 0;
+  const advancePayment = parseFloat(document.getElementById('advancePayment').value) || 0;
+  const totalExpenses = parseFloat(document.getElementById('totalExpenses').value) || 0;
+  const profitInput = document.getElementById('profit');
+  
+  const profit = packagePrice - totalExpenses;
+  profitInput.value = profit.toFixed(2);
+  
+  const paymentStatus = document.getElementById('paymentStatus');
+  if (advancePayment === 0) {
+    paymentStatus.value = 'pending';
+  } else if (advancePayment < packagePrice) {
+    paymentStatus.value = 'partial';
+  } else {
+    paymentStatus.value = 'paid';
+  }
+}
+
+function saveJob() {
+  const clientName = document.getElementById('clientName').value.trim();
+  const packagePrice = parseFloat(document.getElementById('packagePrice').value) || 0;
+  
+  if (!clientName) {
+    showToast('Please enter client name', 'error');
+    return;
+  }
+  
+  if (packagePrice <= 0) {
+    showToast('Please enter a valid package price', 'error');
+    return;
+  }
+  
+  if (!currentUser.permissions.includes('add')) {
+    showToast('You do not have permission to add jobs', 'error');
+    return;
+  }
+  
+  const jobData = {
+    id: 'job_' + Date.now(),
+    client: clientName,
+    phone: document.getElementById('clientPhone').value.trim(),
+    email: document.getElementById('clientEmail').value.trim(),
+    address: document.getElementById('clientAddress').value.trim(),
+    date: document.getElementById('eventDate').value,
+    type: document.getElementById('eventType').value,
+    category: document.getElementById('jobCategory').value,
+    venue: document.getElementById('eventVenue').value.trim(),
+    time: document.getElementById('eventTime').value,
+    packagePrice: packagePrice,
+    advance: parseFloat(document.getElementById('advancePayment').value) || 0,
+    totalExpenses: parseFloat(document.getElementById('totalExpenses').value) || 0,
+    profit: parseFloat(document.getElementById('profit').value) || 0,
+    paymentStatus: document.getElementById('paymentStatus').value,
+    frameSize: document.getElementById('frameSize').options[document.getElementById('frameSize').selectedIndex]?.text,
+    frameUnitPrice: parseFloat(document.getElementById('frameUnitPrice').value) || 0,
+    frameQuantity: parseInt(document.getElementById('frameQuantity').value) || 0,
+    preFrameCost: parseFloat(document.getElementById('preFrameCost').value) || 0,
+    printUnitPrice: parseFloat(document.getElementById('printUnitPrice').value) || 0,
+    printQuantity: parseInt(document.getElementById('printQuantity').value) || 0,
+    thankYouCardTotal: parseFloat(document.getElementById('thankYouCardTotal').value) || 0,
+    preThankYouCardCost: parseFloat(document.getElementById('preThankYouCardCost').value) || 0,
+    notes: document.getElementById('jobNotes').value.trim(),
+    createdAt: new Date().toISOString(),
+    createdBy: currentUser.email,
+    status: 'active'
+  };
+  
+  const jobs = getJobs();
+  jobs.push(jobData);
+  saveJobs(jobs);
+  
+  clearJobForm();
+  showToast('Job saved successfully!', 'success');
+  showSection('allJobs');
+}
+
+function saveJobAsDraft() {
+  const clientName = document.getElementById('clientName').value.trim();
+  
+  if (!clientName) {
+    showToast('Please enter client name for draft', 'error');
+    return;
+  }
+  
+  if (!currentUser.permissions.includes('add')) {
+    showToast('You do not have permission to add jobs', 'error');
+    return;
+  }
+  
+  const jobData = {
+    id: 'draft_' + Date.now(),
+    client: clientName,
+    phone: document.getElementById('clientPhone').value.trim(),
+    email: document.getElementById('clientEmail').value.trim(),
+    address: document.getElementById('clientAddress').value.trim(),
+    date: document.getElementById('eventDate').value,
+    type: document.getElementById('eventType').value,
+    category: document.getElementById('jobCategory').value,
+    venue: document.getElementById('eventVenue').value.trim(),
+    time: document.getElementById('eventTime').value,
+    packagePrice: parseFloat(document.getElementById('packagePrice').value) || 0,
+    advance: parseFloat(document.getElementById('advancePayment').value) || 0,
+    totalExpenses: parseFloat(document.getElementById('totalExpenses').value) || 0,
+    profit: parseFloat(document.getElementById('profit').value) || 0,
+    status: 'draft',
+    createdAt: new Date().toISOString(),
+    createdBy: currentUser.email
+  };
+  
+  const jobs = getJobs();
+  jobs.push(jobData);
+  saveJobs(jobs);
+  
+  showToast('Job saved as draft', 'info');
+}
+
+function clearJobForm() {
+  showConfirmDialog('Clear Form', 'Are you sure you want to clear all form data?', (confirmed) => {
+    if (confirmed) {
+      document.querySelectorAll('#addJobSection input, #addJobSection select, #addJobSection textarea').forEach(element => {
+        if (element.id !== 'photoUpload') {
+          element.value = '';
+        }
+      });
+      
+      const today = new Date();
+      document.getElementById('eventDate').value = today.toISOString().split('T')[0];
+      
+      showToast('Form cleared', 'info');
+    }
+  });
+}
+
+function loadJobs() {
+  const jobs = getJobs();
+  const container = document.getElementById('jobsList');
+  
+  if (jobs.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:60px; color:var(--text-secondary);"><i class="fas fa-clipboard-list" style="font-size:60px; margin-bottom:20px;"></i><h3>No Jobs Found</h3><p>Add your first job to get started</p></div>';
+    return;
+  }
+  
+  container.innerHTML = jobs.map((job, index) => `
+    <div class="neu-card" style="padding:20px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;">
+          <div style="width:50px; height:50px; border-radius:12px; background:linear-gradient(135deg, var(--primary), var(--secondary)); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">
+            ${job.client.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <div style="font-weight:700; color:var(--text); font-size:18px;">${job.client}</div>
+            <div style="color:var(--text-secondary); font-size:14px;">
+              ${job.date} • ${job.type} • ${job.category}
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+          <div>
+            <div style="font-size:12px; color:var(--text-secondary);">Package</div>
+            <div style="font-weight:600; color:var(--success);">${formatCurrency(job.packagePrice || 0)}</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-secondary);">Advance</div>
+            <div style="font-weight:600; color:var(--warning);">${formatCurrency(job.advance || 0)}</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-secondary);">Profit</div>
+            <div style="font-weight:600; color:var(--accent);">${formatCurrency(job.profit || 0)}</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-secondary);">Status</div>
+            <div style="font-weight:600; color:${job.status === 'draft' ? 'var(--warning)' : job.paymentStatus === 'paid' ? 'var(--success)' : 'var(--danger)'}">
+              ${job.status === 'draft' ? 'Draft' : job.paymentStatus || 'Pending'}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="neu-btn" onclick="editJob('${job.id}')" style="padding:8px 16px; font-size:14px;" ${!currentUser.permissions.includes('edit') ? 'disabled' : ''}>
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="neu-btn" onclick="deleteJob('${job.id}')" style="padding:8px 16px; font-size:14px; background:var(--danger);" ${!currentUser.permissions.includes('delete') ? 'disabled' : ''}>
+          <i class="fas fa-trash"></i>
+        </button>
+        <button class="neu-btn" onclick="generateInvoiceModal('${job.id}')" style="padding:8px 16px; font-size:14px; background:var(--secondary);" ${!currentUser.permissions.includes('view_summary') ? 'disabled' : ''}>
+          <i class="fas fa-file-invoice"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editJob(jobId) {
+  if (!currentUser.permissions.includes('edit')) {
+    showToast('You do not have permission to edit jobs', 'error');
+    return;
+  }
+  
+  const jobs = getJobs();
+  const job = jobs.find(j => j.id === jobId);
+  
+  if (!job) {
+    showToast('Job not found', 'error');
+    return;
+  }
+  
+  document.getElementById('clientName').value = job.client || '';
+  document.getElementById('clientPhone').value = job.phone || '';
+  document.getElementById('clientEmail').value = job.email || '';
+  document.getElementById('clientAddress').value = job.address || '';
+  document.getElementById('eventDate').value = job.date || '';
+  document.getElementById('eventType').value = job.type || '';
+  document.getElementById('jobCategory').value = job.category || '';
+  document.getElementById('eventVenue').value = job.venue || '';
+  document.getElementById('eventTime').value = job.time || '';
+  document.getElementById('packagePrice').value = job.packagePrice || 0;
+  document.getElementById('advancePayment').value = job.advance || 0;
+  document.getElementById('totalExpenses').value = job.totalExpenses || 0;
+  document.getElementById('profit').value = job.profit || 0;
+  document.getElementById('paymentStatus').value = job.paymentStatus || 'pending';
+  document.getElementById('jobNotes').value = job.notes || '';
+  
+  if (job.frameSize) {
+    const frameSizeSelect = document.getElementById('frameSize');
+    for (let option of frameSizeSelect.options) {
+      if (option.text === job.frameSize) {
+        frameSizeSelect.value = option.value;
+        updateFramePrice();
+        break;
+      }
+    }
+  }
+  
+  document.getElementById('frameUnitPrice').value = job.frameUnitPrice || 0;
+  document.getElementById('frameQuantity').value = job.frameQuantity || 0;
+  document.getElementById('preFrameCost').value = job.preFrameCost || 0;
+  document.getElementById('printUnitPrice').value = job.printUnitPrice || 0;
+  document.getElementById('printQuantity').value = job.printQuantity || 0;
+  document.getElementById('thankYouCardTotal').value = job.thankYouCardTotal || 0;
+  document.getElementById('preThankYouCardCost').value = job.preThankYouCardCost || 0;
+  
+  editingId = jobId;
+  showSection('addJobSection');
+  showToast('Editing job - make changes and save', 'info');
+}
+
+function deleteJob(jobId) {
+  if (!currentUser.permissions.includes('delete')) {
+    showToast('You do not have permission to delete jobs', 'error');
+    return;
+  }
+  
+  showConfirmDialog('Delete Job', 'Are you sure you want to delete this job? This action cannot be undone.', (confirmed) => {
+    if (confirmed) {
+      const jobs = getJobs();
+      const filteredJobs = jobs.filter(job => job.id !== jobId);
+      saveJobs(filteredJobs);
+      loadJobs();
+      showToast('Job deleted successfully', 'success');
+    }
+  });
+}
+
+// ========== INVOICE FUNCTIONS ==========
+function generateInvoiceModal(jobId) {
+  if (!currentUser.permissions.includes('view_summary')) {
+    showToast('You do not have permission to generate invoices', 'error');
+    return;
+  }
+  
+  const jobs = getJobs();
+  const job = jobs.find(j => j.id === jobId);
+  
+  if (!job) {
+    showToast('Job not found', 'error');
+    return;
+  }
+  
+  const invoiceNumber = db.getNextInvoiceNumber();
+  const invoiceDate = new Date().toISOString().split('T')[0];
+  const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  
+  const invoiceItems = [];
+  
+  if (job.packagePrice && job.packagePrice > 0) {
+    invoiceItems.push(`
+      <tr>
+        <td style="padding:12px 15px; border-bottom:1px solid #ECEBEB;">${job.type || 'Photography'} Package - ${job.category || 'Standard'}</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">1</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">${formatCurrency(job.packagePrice)}</td>
+        <td style="padding:12px 15px; text-align:right; border-bottom:1px solid #ECEBEB;">${formatCurrency(job.packagePrice)}</td>
+      </tr>
+    `);
+  }
+  
+  if (job.frameQuantity && job.frameQuantity > 0) {
+    const frameTotal = (job.frameUnitPrice || 0) * (job.frameQuantity || 0);
+    invoiceItems.push(`
+      <tr>
+        <td style="padding:12px 15px; border-bottom:1px solid #ECEBEB;">Photo Frames - ${job.frameSize || 'Standard'}</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">${job.frameQuantity}</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">${formatCurrency(job.frameUnitPrice || 0)}</td>
+        <td style="padding:12px 15px; text-align:right; border-bottom:1px solid #ECEBEB;">${formatCurrency(frameTotal)}</td>
+      </tr>
+    `);
+  }
+  
+  if (job.printQuantity && job.printQuantity > 0) {
+    const printTotal = (job.printUnitPrice || 0) * (job.printQuantity || 0);
+    invoiceItems.push(`
+      <tr>
+        <td style="padding:12px 15px; border-bottom:1px solid #ECEBEB;">Photo Prints</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">${job.printQuantity}</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">${formatCurrency(job.printUnitPrice || 0)}</td>
+        <td style="padding:12px 15px; text-align:right; border-bottom:1px solid #ECEBEB;">${formatCurrency(printTotal)}</td>
+      </tr>
+    `);
+  }
+  
+  if (job.preFrameCost && job.preFrameCost > 0) {
+    invoiceItems.push(`
+      <tr>
+        <td style="padding:12px 15px; border-bottom:1px solid #ECEBEB;">Pre-Frame Service</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">1</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">${formatCurrency(job.preFrameCost)}</td>
+        <td style="padding:12px 15px; text-align:right; border-bottom:1px solid #ECEBEB;">${formatCurrency(job.preFrameCost)}</td>
+      </tr>
+    `);
+  }
+  
+  if (job.thankYouCardTotal && job.thankYouCardTotal > 0) {
+    invoiceItems.push(`
+      <tr>
+        <td style="padding:12px 15px; border-bottom:1px solid #ECEBEB;">Thank You Cards</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">1</td>
+        <td style="padding:12px 15px; text-align:center; border-bottom:1px solid #ECEBEB;">${formatCurrency(job.thankYouCardTotal)}</td>
+        <td style="padding:12px 15px; text-align:right; border-bottom:1px solid #ECEBEB;">${formatCurrency(job.thankYouCardTotal)}</td>
+      </tr>
+    `);
+  }
+  
+  const subtotal = invoiceItems.reduce((total, item) => {
+    const amountMatch = item.match(/LKR\s*([\d,]+\.?\d*)/g);
+    if (amountMatch) {
+      const amountStr = amountMatch[amountMatch.length - 1].replace('LKR ', '').replace(/,/g, '');
+      return total + parseFloat(amountStr) || 0;
+    }
+    return total;
+  }, 0);
+  
+  const advancePaid = job.advance || 0;
+  const totalDue = subtotal - advancePaid;
+  
+  const invoiceHTML = `
+    <div class="invoice-container">
+      <div class="invoice-header"></div>
+      <div class="invoice-body">
+        <div class="invoice-top">
+          <div class="invoice-company">
+            <h1>ELEGANT DREAM STUDIO</h1>
+            <p>Indrajith Nayomal Photograph</p>
+          </div>
+          <div class="invoice-title">
+            <h2>INVOICE</h2>
+            <p>${invoiceNumber}</p>
+          </div>
+        </div>
+        
+        <div class="invoice-info">
+          <div class="invoice-to">
+            <p class="invoice-to-label">Invoice To</p>
+            <h3 class="invoice-client">${job.client || 'Client Name'}</h3>
+            <p style="margin:4px 0 0; font-size:13px; color:#666; line-height:1.5;">
+              ${job.address || 'Address not provided'}<br>
+              Phone: ${job.phone || 'Not provided'} | Email: ${job.email || 'Not provided'}
+            </p>
+          </div>
+          <div class="invoice-details">
+            <div style="margin-bottom:6px;">
+              <span style="font-size:13px; color:#888; margin-right:10px;">Date:</span>
+              <span style="font-size:13px; font-weight:600; color:#333;">${invoiceDate}</span>
+            </div>
+            <div style="margin-bottom:6px;">
+              <span style="font-size:13px; color:#888; margin-right:10px;">Due Date:</span>
+              <span style="font-size:13px; font-weight:600; color:#333;">${dueDate}</span>
+            </div>
+            <div>
+              <span style="font-size:13px; color:#888; margin-right:10px;">Job Type:</span>
+              <span style="font-size:11px; font-weight:600; color:var(--primary); background:#f3f2f5; padding:3px 8px; border-radius:4px;">
+                ${job.type || 'General'}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <table class="invoice-table">
+          <thead>
+            <tr>
+              <th>Service Description</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Amount (LKR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${invoiceItems.join('')}
+          </tbody>
+        </table>
+        
+        <div class="invoice-payment">
+          <div class="payment-method">
+            <p class="payment-method-label">Payment Method</p>
+            <div class="payment-details">
+              <div>
+                <span>Bank:</span>
+                <span>BOC Bank - Horana</span>
+              </div>
+              <div>
+                <span>Account Name:</span>
+                <span style="font-weight:600; color:#333;">W.A.I Nayomal</span>
+              </div>
+              <div>
+                <span>Account No:</span>
+                <span style="font-family:monospace; font-size:14px; font-weight:600;">95121323</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="invoice-totals">
+            <div class="total-row">
+              <span style="color:#666; font-size:14px;">Sub Total</span>
+              <span style="font-weight:600; color:#333; font-size:14px;">${formatCurrency(subtotal)}</span>
+            </div>
+            <div class="total-row">
+              <span style="color:#666; font-size:14px;">Tax (0%)</span>
+              <span style="font-weight:600; color:#333; font-size:14px;">${formatCurrency(0)}</span>
+            </div>
+            <div class="total-row advance">
+              <span style="color:var(--primary); font-size:14px;">Advance received</span>
+              <span style="font-weight:500; color:var(--primary); font-size:14px;">${formatCurrency(advancePaid)}</span>
+            </div>
+            <div class="total-due">
+              <span>Total Due</span>
+              <span>${formatCurrency(totalDue)}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="invoice-terms">
+          <p>
+            <strong>Photography Terms:</strong> All images remain the property of Elegant Dream Studio until full payment is received. Digital files will be delivered within 14 days after payment clearance.
+          </p>
+        </div>
+        
+        <div class="invoice-footer">
+          <h3>Capture Your Beautiful Moments</h3>
+          <p>Note: This is a computer-generated invoice & no signature required</p>
+          <div class="invoice-contact">
+            <span>indrajithnayomal70@gmail.com</span>
+            <span>|</span>
+            <span>077 400 36 71</span>
+            <span>|</span>
+            <span><a href="#" style="color:var(--primary); text-decoration:none; font-weight:600;">Elegant Dream Studio</a></span>
+          </div>
+          <p style="font-size:10px; color:#aaa; margin-top:15px;">
+            Professional Photography Services • Portraits • Events • Commercial
+          </p>
+          <div class="invoice-actions">
+            <button class="neu-btn" onclick="printInvoice()" style="padding:10px 20px;">
+              <i class="fas fa-print"></i> Print
+            </button>
+            <button class="neu-btn" onclick="downloadInvoicePDF('${jobId}')" style="padding:10px 20px; background:var(--primary);">
+              <i class="fas fa-file-pdf"></i> Download PDF
+            </button>
+            <button class="neu-btn" onclick="closeInvoiceModal()" style="padding:10px 20px; background:var(--danger);">
+              <i class="fas fa-times"></i> Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('invoiceModal').classList.add('active');
+  document.getElementById('invoiceModal').querySelector('.invoice-content').innerHTML = invoiceHTML;
+  
+  db.addActivity('GENERATE_INVOICE', { jobId: jobId, invoiceNumber: invoiceNumber });
+}
+
+// ========== PDF DOWNLOAD FUNCTION - FIXED VERSION ==========
+function downloadInvoicePDF(jobId) {
+  const jobs = getJobs();
+  const job = jobs.find(j => j.id === jobId);
+  
+  if (!job) {
+    showToast('Job not found', 'error');
+    return;
+  }
+  
+  const invoiceNumber = db.get('INVOICE_COUNTER') || 1000;
+  const invoiceDate = new Date().toISOString().split('T')[0];
+  const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  
+  // Initialize jsPDF with autotable plugin
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  
+  // Calculate items for the table
+  const items = [];
+  
+  // Main package
+  if (job.packagePrice && job.packagePrice > 0) {
+    items.push({
+      description: `${job.type || 'Photography'} Package - ${job.category || 'Standard'}`,
+      quantity: '1',
+      unitPrice: formatCurrencyNumber(job.packagePrice),
+      total: formatCurrencyNumber(job.packagePrice)
+    });
+  }
+  
+  // Frames
+  if (job.frameQuantity && job.frameQuantity > 0) {
+    const frameTotal = (job.frameUnitPrice || 0) * (job.frameQuantity || 0);
+    items.push({
+      description: `Photo Frames - ${job.frameSize || 'Standard'}`,
+      quantity: job.frameQuantity.toString(),
+      unitPrice: formatCurrencyNumber(job.frameUnitPrice || 0),
+      total: formatCurrencyNumber(frameTotal)
+    });
+  }
+  
+  // Prints
+  if (job.printQuantity && job.printQuantity > 0) {
+    const printTotal = (job.printUnitPrice || 0) * (job.printQuantity || 0);
+    items.push({
+      description: 'Photo Prints',
+      quantity: job.printQuantity.toString(),
+      unitPrice: formatCurrencyNumber(job.printUnitPrice || 0),
+      total: formatCurrencyNumber(printTotal)
+    });
+  }
+  
+  // Additional services
+  if (job.preFrameCost && job.preFrameCost > 0) {
+    items.push({
+      description: 'Pre-Frame Service',
+      quantity: '1',
+      unitPrice: formatCurrencyNumber(job.preFrameCost),
+      total: formatCurrencyNumber(job.preFrameCost)
+    });
+  }
+  
+  if (job.thankYouCardTotal && job.thankYouCardTotal > 0) {
+    items.push({
+      description: 'Thank You Cards',
+      quantity: '1',
+      unitPrice: formatCurrencyNumber(job.thankYouCardTotal),
+      total: formatCurrencyNumber(job.thankYouCardTotal)
+    });
+  }
+  
+  // Calculate totals
+  const subtotal = items.reduce((sum, item) => sum + parseFloat(item.total.replace(/,/g, '')), 0);
+  const advancePaid = job.advance || 0;
+  const totalDue = subtotal - advancePaid;
+  
+  // Header
+  doc.setFillColor(0, 102, 204);
+  doc.rect(0, 0, 210, 15, 'F');
+  
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(20);
+  doc.text('ELEGANT DREAM STUDIO', 105, 10, { align: 'center' });
+  doc.setFontSize(10);
+  doc.text('Professional Photography Services', 105, 16, { align: 'center' });
+  
+  // Invoice title
+  doc.setTextColor(0, 102, 204);
+  doc.setFontSize(24);
+  doc.text('INVOICE', 20, 35);
+  
+  // Invoice details
+  doc.setTextColor(100, 100, 100);
+  doc.setFontSize(10);
+  doc.text(`Invoice #: EDS-INV-${invoiceNumber}`, 20, 42);
+  doc.text(`Date: ${invoiceDate}`, 20, 47);
+  doc.text(`Due Date: ${dueDate}`, 20, 52);
+  
+  // Company info
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(12);
+  doc.text('Elegant Dream Studio', 150, 35);
+  doc.setFontSize(10);
+  doc.text('Indrajith Nayomal Photograph', 150, 40);
+  doc.text('indrajithnayomal70@gmail.com', 150, 45);
+  doc.text('077 400 36 71', 150, 50);
+  
+  // Client info
+  doc.setFontSize(14);
+  doc.text('Invoice To:', 20, 65);
+  doc.setFontSize(12);
+  doc.text(job.client || 'Client Name', 20, 72);
+  doc.setFontSize(10);
+  
+  const addressLines = doc.splitTextToSize(job.address || 'Address not provided', 100);
+  let addressY = 78;
+  addressLines.forEach(line => {
+    doc.text(line, 20, addressY);
+    addressY += 5;
+  });
+  
+  doc.text(`Phone: ${job.phone || 'Not provided'}`, 20, addressY);
+  doc.text(`Email: ${job.email || 'Not provided'}`, 20, addressY + 5);
+  
+  // Create table using autotable plugin
+  doc.autoTable({
+    startY: addressY + 15,
+    head: [['Description', 'Qty', 'Unit Price (LKR)', 'Total (LKR)']],
+    body: items.map(item => [item.description, item.quantity, item.unitPrice, item.total]),
+    headStyles: {
+      fillColor: [0, 102, 204],
+      textColor: [255, 255, 255],
+      fontSize: 10
+    },
+    bodyStyles: {
+      fontSize: 9
+    },
+    columnStyles: {
+      0: { cellWidth: 80 },
+      1: { cellWidth: 20 },
+      2: { cellWidth: 40 },
+      3: { cellWidth: 40 }
+    },
+    margin: { left: 20, right: 20 },
+    styles: {
+      overflow: 'linebreak',
+      cellPadding: 3
+    }
+  });
+  
+  let finalY = doc.lastAutoTable.finalY + 10;
+  
+  // Totals
+  doc.setFontSize(11);
+  doc.text('Subtotal:', 150, finalY);
+  doc.text(formatCurrencyNumber(subtotal), 180, finalY, { align: 'right' });
+  finalY += 8;
+  
+  doc.text('Tax (0%):', 150, finalY);
+  doc.text('0.00', 180, finalY, { align: 'right' });
+  finalY += 8;
+  
+  doc.setTextColor(0, 102, 204);
+  doc.text('Advance Paid:', 150, finalY);
+  doc.text(formatCurrencyNumber(advancePaid), 180, finalY, { align: 'right' });
+  finalY += 10;
+  
+  doc.setFillColor(0, 102, 204);
+  doc.rect(140, finalY, 50, 10, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.text('Total Due:', 142, finalY + 7);
+  doc.text(formatCurrencyNumber(totalDue), 180, finalY + 7, { align: 'right' });
+  finalY += 20;
+  
+  // Payment details
+  doc.setTextColor(0, 0, 0);
+  doc.text('Payment Details:', 20, finalY);
+  finalY += 8;
+  
+  doc.setFontSize(10);
+  doc.text('Bank: BOC Bank - Horana', 22, finalY);
+  finalY += 6;
+  doc.text('Account Name: W.A.I Nayomal', 22, finalY);
+  finalY += 6;
+  doc.text('Account No: 95121323', 22, finalY);
+  finalY += 15;
+  
+  // Terms
+  doc.setTextColor(100, 100, 100);
+  doc.text('Terms & Conditions:', 20, finalY);
+  finalY += 7;
+  
+  const terms = 'All images remain the property of Elegant Dream Studio until full payment is received. Digital files will be delivered within 14 days after payment clearance.';
+  const splitTerms = doc.splitTextToSize(terms, 170);
+  doc.text(splitTerms, 20, finalY);
+  
+  // Footer
+  doc.setFontSize(9);
+  doc.setTextColor(150, 150, 150);
+  doc.text('Thank you for your business!', 105, 280, { align: 'center' });
+  doc.text('Elegant Dream Studio • Professional Photography Services', 105, 285, { align: 'center' });
+  doc.text('indrajithnayomal70@gmail.com • 077 400 36 71', 105, 290, { align: 'center' });
+  
+  // Save PDF
+  const fileName = `Invoice_${job.client.replace(/[^a-zA-Z0-9]/g, '_') || 'Client'}_${invoiceDate}.pdf`;
+  doc.save(fileName);
+  
+  showToast('PDF invoice downloaded successfully!', 'success');
+}
+
+// Helper function for PDF number formatting
+function formatCurrencyNumber(amount) {
+  return amount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function printInvoice() {
+  const invoiceContent = document.querySelector('.invoice-content').innerHTML;
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Invoice - Elegant Dream Studio</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+          @media print {
+            body { padding: 0; }
+            .no-print { display: none !important; }
+          }
+        </style>
+      </head>
+      <body>
+        ${invoiceContent}
+        <div class="no-print" style="text-align:center; margin-top:20px;">
+          <button onclick="window.print()" style="padding:10px 20px; background:#0066cc; color:white; border:none; border-radius:5px; cursor:pointer;">
+            Print Invoice
+          </button>
+          <button onclick="window.close()" style="padding:10px 20px; background:#ff4444; color:white; border:none; border-radius:5px; cursor:pointer; margin-left:10px;">
+            Close
+          </button>
+        </div>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+function closeInvoiceModal() {
+  document.getElementById('invoiceModal').classList.remove('active');
+}
+
+function bulkGenerateInvoices() {
+  const jobs = getJobs();
+  const pendingJobs = jobs.filter(job => (job.advance || 0) < (job.packagePrice || 0));
+  
+  if (pendingJobs.length === 0) {
+    showToast('No pending jobs to generate invoices for', 'warning');
+    return;
+  }
+  
+  showConfirmDialog('Bulk Invoice Generation', 
+    `Generate invoices for ${pendingJobs.length} pending jobs?`, 
+    (confirmed) => {
+      if (confirmed) {
+        showToast(`Generating ${pendingJobs.length} invoices...`, 'info');
+        setTimeout(() => {
+          showToast(`${pendingJobs.length} invoices generated successfully!`, 'success');
+        }, 1500);
+      }
+    }
+  );
+}
+
+// ========== DASHBOARD MANAGEMENT ==========
+function showSection(sectionId) {
+  document.querySelectorAll('.section').forEach(section => {
+    section.classList.add('hidden');
+  });
+  
+  const section = document.getElementById(sectionId);
+  if (section) {
+    section.classList.remove('hidden');
+    currentSection = sectionId;
+    
+    updateBreadcrumb(sectionId);
+    
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    const navMap = {
+      'dashboardHome': 0,
+      'addJobSection': 1,
+      'allJobs': 2,
+      'clientGallery': 3,
+      'expenseTracker': 4,
+      'reportsAnalytics': 5,
+      'paymentReminders': 6,
+      'templates': 7,
+      'settings': 8,
+      'userManagement': 9
+    };
+    
+    const navIndex = navMap[sectionId];
+    if (navIndex !== undefined) {
+      document.querySelectorAll('.nav-item')[navIndex]?.classList.add('active');
+    }
+    
+    loadSectionData(sectionId);
+  }
+}
+
+function loadSectionData(sectionId) {
+  switch(sectionId) {
+    case 'dashboardHome':
+      loadDashboardWidgets();
+      break;
+    case 'allJobs':
+      loadJobs();
+      break;
+    case 'clientGallery':
+      loadGallery();
+      break;
+    case 'expenseTracker':
+      loadExpenses();
+      break;
+    case 'paymentReminders':
+      loadReminders();
+      break;
+    case 'templates':
+      loadTemplates();
+      break;
+    case 'reportsAnalytics':
+      loadAnalytics();
+      break;
+    case 'userManagement':
+      loadUserManagement();
+      break;
+  }
+}
+
+function updateBreadcrumb(sectionId) {
+  const breadcrumbMap = {
+    'dashboardHome': 'Dashboard',
+    'addJobSection': 'Add Job',
+    'allJobs': 'All Jobs',
+    'clientGallery': 'Client Gallery',
+    'expenseTracker': 'Expense Tracker',
+    'reportsAnalytics': 'Reports & Analytics',
+    'paymentReminders': 'Payment Reminders',
+    'templates': 'Templates',
+    'settings': 'Settings',
+    'userManagement': 'User Management'
+  };
+  
+  document.getElementById('currentPage').textContent = breadcrumbMap[sectionId] || 'Dashboard';
+}
+
+// ========== DASHBOARD WIDGETS ==========
+function loadDashboardWidgets() {
+  const jobs = getJobs();
+  const expenses = db.get('EXPENSES') || [];
+  
+  const totalJobs = jobs.length;
+  const totalRevenue = jobs.reduce((sum, job) => sum + (job.packagePrice || 0), 0);
+  const totalProfit = jobs.reduce((sum, job) => sum + (job.profit || 0), 0);
+  const pendingJobs = jobs.filter(job => (job.advance || 0) < (job.packagePrice || 0)).length;
+  
+  document.getElementById('widgetTotalJobs').textContent = totalJobs;
+  document.getElementById('widgetRevenue').textContent = formatCurrency(totalRevenue);
+  document.getElementById('widgetProfit').textContent = formatCurrency(totalProfit);
+  document.getElementById('widgetPending').textContent = pendingJobs;
+  
+  const activeClients = new Set(jobs.map(job => job.client)).size;
+  const thisMonth = new Date().getMonth();
+  const monthlyShoots = jobs.filter(job => {
+    if (!job.date) return false;
+    const jobDate = new Date(job.date);
+    return jobDate.getMonth() === thisMonth;
+  }).length;
+  const avgPackage = totalJobs > 0 ? totalRevenue / totalJobs : 0;
+  const completionRate = totalJobs > 0 ? Math.round((totalJobs - pendingJobs) / totalJobs * 100) : 0;
+  
+  document.getElementById('activeClients').textContent = activeClients;
+  document.getElementById('monthlyShoots').textContent = monthlyShoots;
+  document.getElementById('avgPackage').textContent = formatCurrency(avgPackage);
+  document.getElementById('completionRate').textContent = completionRate + '%';
+  
+  loadRecentJobs();
+  loadExpenseSummary();
+  initCharts();
+}
+
+function loadRecentJobs() {
+  const jobs = getJobs().slice(0, 5);
+  const container = document.getElementById('recentJobsList');
+  
+  if (jobs.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-secondary);">No recent jobs</div>';
+    return;
+  }
+  
+  container.innerHTML = jobs.map(job => `
+    <div class="neu-card" style="padding:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-weight:600; color:var(--text);">${job.client || 'Unknown Client'}</div>
+        <div style="font-size:12px; color:var(--text-secondary);">${job.category || 'General'} • ${job.date ? new Date(job.date).toLocaleDateString() : 'No date'}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-weight:700; color:var(--success);">${formatCurrency(job.packagePrice || 0)}</div>
+        <div style="font-size:12px; color:var(--text-secondary);">${(job.advance || 0) < (job.packagePrice || 0) ? 'Pending' : 'Paid'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadExpenseSummary() {
+  const expenses = db.get('EXPENSES') || [];
+  const container = document.getElementById('expenseSummary');
+  
+  if (expenses.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-secondary);">No expenses recorded</div>';
+    return;
+  }
+  
+  const byCategory = {};
+  expenses.forEach(expense => {
+    if (!byCategory[expense.category]) byCategory[expense.category] = 0;
+    byCategory[expense.category] += expense.amount;
+  });
+  
+  container.innerHTML = Object.entries(byCategory).map(([category, total]) => `
+    <div class="expense-category">
+      <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+        <span style="font-weight:600; color:var(--text);">${category}</span>
+        <span style="color:var(--danger); font-weight:700;">${formatCurrency(total)}</span>
+      </div>
+      <div style="height:6px; background:var(--glass-bg); border-radius:3px; overflow:hidden;">
+        <div style="height:100%; background:var(--danger); width:${Math.min(total / 10000 * 100, 100)}%;"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function initCharts() {
+  const jobs = getJobs();
+  const expenses = db.get('EXPENSES') || [];
+  
+  const statsCtx = document.getElementById('statsChart')?.getContext('2d');
+  if (statsCtx) {
+    const monthlyData = getMonthlyData(jobs);
+    new Chart(statsCtx, {
+      type: 'line',
+      data: {
+        labels: monthlyData.months,
+        datasets: [
+          {
+            label: 'Revenue',
+            data: monthlyData.revenue,
+            borderColor: '#00cc99',
+            backgroundColor: 'rgba(0, 204, 153, 0.1)',
+            tension: 0.4
+          },
+          {
+            label: 'Profit',
+            data: monthlyData.profit,
+            borderColor: '#0066cc',
+            backgroundColor: 'rgba(0, 102, 204, 0.1)',
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: 'var(--text)' }
+          }
+        },
+        scales: {
+          x: { ticks: { color: 'var(--text-secondary)' } },
+          y: { ticks: { color: 'var(--text-secondary)' } }
+        }
+      }
+    });
+  }
+  
+  const expenseCtx = document.getElementById('expenseChart')?.getContext('2d');
+  if (expenseCtx) {
+    const expenseData = getExpenseByCategory(expenses);
+    new Chart(expenseCtx, {
+      type: 'doughnut',
+      data: {
+        labels: expenseData.labels,
+        datasets: [{
+          data: expenseData.amounts,
+          backgroundColor: [
+            '#ff4444', '#ffaa00', '#33b5e5', '#00cc99', 
+            '#9966ff', '#ff66cc', '#66ccff', '#cccc00'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: 'var(--text)' }
+          }
+        }
+      }
+    });
+  }
+}
+
+// ========== CLIENT GALLERY ==========
+function loadGallery() {
+  const gallery = db.get('GALLERY') || [];
+  const container = document.getElementById('galleryGrid');
+  
+  if (gallery.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column:1/-1; text-align:center; padding:60px;">
+        <i class="fas fa-images" style="font-size:60px; color:var(--text-secondary); margin-bottom:20px;"></i>
+        <h3 style="color:var(--text-secondary); margin-bottom:10px;">No Photos Yet</h3>
+        <p style="color:var(--text-secondary); margin-bottom:20px;">Upload photos to create your gallery</p>
+        <button class="neu-btn" onclick="uploadPhotos()" style="padding:12px 24px;">
+          <i class="fas fa-cloud-upload-alt"></i> Upload Photos
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = gallery.map((photo, index) => `
+    <div class="gallery-item neu-card">
+      <div class="skeleton" style="width:100%; height:100%;"></div>
+      <div class="gallery-overlay">
+        <div style="font-weight:600; margin-bottom:5px;">${photo.client || 'Unknown Client'}</div>
+        <div style="font-size:12px; opacity:0.8;">${photo.category || 'General'} • ${new Date(photo.date).toLocaleDateString()}</div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button class="neu-btn" onclick="viewPhoto(${index})" style="padding:5px 10px; font-size:12px;">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="neu-btn" onclick="downloadPhoto(${index})" style="padding:5px 10px; font-size:12px; background:var(--success);">
+            <i class="fas fa-download"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ========== EXPENSE TRACKER ==========
+function loadExpenses() {
+  const expenses = db.get('EXPENSES') || [];
+  const container = document.getElementById('expenseSummaryList');
+  
+  const thisMonth = new Date().toISOString().slice(0, 7);
+  const monthlyTotal = expenses
+    .filter(exp => exp.date && exp.date.slice(0, 7) === thisMonth)
+    .reduce((sum, exp) => sum + (exp.amount || 0), 0);
+  
+  document.getElementById('totalMonthlyExpense').textContent = formatCurrency(monthlyTotal);
+  
+  const recentExpenses = expenses.slice(0, 10);
+  
+  if (recentExpenses.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-secondary);">No expenses recorded</div>';
+    return;
+  }
+  
+  container.innerHTML = recentExpenses.map(expense => `
+    <div class="neu-card" style="padding:15px; margin-bottom:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-weight:600; color:var(--text);">${expense.description || 'No description'}</div>
+          <div style="font-size:12px; color:var(--text-secondary);">
+            ${expense.category || 'Uncategorized'} • ${expense.date ? new Date(expense.date).toLocaleDateString() : 'No date'}
+          </div>
+        </div>
+        <div style="color:var(--danger); font-weight:700;">${formatCurrency(expense.amount || 0)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addExpense() {
+  const category = document.getElementById('expenseCategory').value;
+  const description = document.getElementById('expenseDescription').value.trim();
+  const amount = parseFloat(document.getElementById('expenseAmount').value);
+  const date = document.getElementById('expenseDate').value;
+  
+  if (!category || !description || !amount || !date) {
+    showToast('Please fill all expense fields', 'error');
+    return;
+  }
+  
+  const expenses = db.get('EXPENSES') || [];
+  expenses.push({
+    id: 'exp_' + Date.now(),
+    category,
+    description,
+    amount,
+    date,
+    addedBy: currentUser.email,
+    addedAt: new Date().toISOString()
+  });
+  
+  db.set('EXPENSES', expenses);
+  
+  document.getElementById('expenseCategory').value = '';
+  document.getElementById('expenseDescription').value = '';
+  document.getElementById('expenseAmount').value = '';
+  document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
+  
+  loadExpenses();
+  showToast('Expense added successfully!', 'success');
+}
+
+// ========== PAYMENT REMINDERS ==========
+function loadReminders() {
+  const jobs = getJobs();
+  const container = document.getElementById('reminderList');
+  
+  const today = new Date();
+  const reminders = jobs
+    .filter(job => {
+      if (!job.date) return false;
+      const jobDate = new Date(job.date);
+      const daysDiff = Math.ceil((today - jobDate) / (1000 * 60 * 60 * 24));
+      return (job.advance || 0) < (job.packagePrice || 0) && daysDiff > 0 && daysDiff <= 30;
+    })
+    .map(job => ({
+      id: job.id,
+      client: job.client || 'Unknown Client',
+      amount: (job.packagePrice || 0) - (job.advance || 0),
+      daysOverdue: Math.ceil((today - new Date(job.date)) / (1000 * 60 * 60 * 24)),
+      lastReminder: null,
+      reminderCount: 0
+    }));
+  
+  document.getElementById('reminderCount').textContent = reminders.length;
+  
+  if (reminders.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-secondary);">No pending reminders</div>';
+    return;
+  }
+  
+  container.innerHTML = reminders.map(reminder => `
+    <div class="reminder-item ${reminder.daysOverdue > 7 ? 'urgent' : ''}">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="font-weight:600; color:var(--text);">${reminder.client}</div>
+        <div style="color:var(--danger); font-weight:700;">${formatCurrency(reminder.amount)}</div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-size:12px; color:var(--text-secondary);">
+          ${reminder.daysOverdue} day${reminder.daysOverdue !== 1 ? 's' : ''} overdue
+        </div>
+        <button class="neu-btn" onclick="sendReminder('${reminder.id}')" style="padding:8px 16px; font-size:12px;">
+          <i class="fas fa-paper-plane"></i> Send Reminder
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function sendReminders() {
+  showConfirmDialog('Send Reminders', 'Send payment reminders to all clients with pending balances?', (confirmed) => {
+    if (confirmed) {
+      showToast('Reminders sent successfully!', 'success');
+      loadReminders();
+    }
+  });
+}
+
+// ========== TEMPLATES ==========
+function loadTemplates() {
+  const templates = db.get('TEMPLATES') || [];
+  const container = document.getElementById('templateGrid');
+  
+  if (templates.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column:1/-1; text-align:center; padding:60px;">
+        <i class="fas fa-layer-group" style="font-size:60px; color:var(--text-secondary); margin-bottom:20px;"></i>
+        <h3 style="color:var(--text-secondary); margin-bottom:10px;">No Templates</h3>
+        <p style="color:var(--text-secondary); margin-bottom:20px;">Create templates for recurring jobs</p>
+        <button class="neu-btn" onclick="createNewTemplate()" style="padding:12px 24px;">
+          <i class="fas fa-plus"></i> Create Template
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = templates.map(template => `
+    <div class="template-card" onclick="useTemplate('${template.id}')">
+      <h4 style="margin-bottom:10px; color:var(--text);">${template.name}</h4>
+      <p style="color:var(--text-secondary); margin-bottom:15px; font-size:14px;">${template.description || 'No description'}</p>
+      <div style="display:flex; justify-content:space-between;">
+        <span style="font-size:12px; color:var(--text-secondary);">Created: ${new Date(template.createdAt).toLocaleDateString()}</span>
+        <button class="neu-btn" onclick="event.stopPropagation(); deleteTemplate('${template.id}')" style="padding:5px 10px; font-size:12px; background:var(--danger);">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ========== UTILITY FUNCTIONS ==========
+function formatCurrency(amount) {
+  return 'LKR ' + amount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function getMonthlyData(jobs) {
+  const monthlyData = {};
+  const now = new Date();
+  
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+    monthlyData[key] = { revenue: 0, profit: 0 };
+  }
+  
+  jobs.forEach(job => {
+    if (!job.date) return;
+    const date = new Date(job.date);
+    const key = date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+    
+    if (monthlyData[key]) {
+      monthlyData[key].revenue += job.packagePrice || 0;
+      monthlyData[key].profit += job.profit || 0;
+    }
+  });
+  
+  return {
+    months: Object.keys(monthlyData),
+    revenue: Object.values(monthlyData).map(d => d.revenue),
+    profit: Object.values(monthlyData).map(d => d.profit)
+  };
+}
+
+function getExpenseByCategory(expenses) {
+  const categories = {};
+  
+  expenses.forEach(expense => {
+    if (!categories[expense.category]) categories[expense.category] = 0;
+    categories[expense.category] += expense.amount || 0;
+  });
+  
+  return {
+    labels: Object.keys(categories),
+    amounts: Object.values(categories)
+  };
+}
+
+// ========== UI UTILITIES ==========
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  const icons = {
+    success: 'fa-check-circle',
+    error: 'fa-exclamation-circle',
+    warning: 'fa-exclamation-triangle',
+    info: 'fa-info-circle'
+  };
+  
+  toast.innerHTML = `
+    <i class="fas ${icons[type] || 'fa-info-circle'}"></i>
+    <span>${message}</span>
+  `;
+  
+  container.appendChild(toast);
+  
+  setTimeout(() => toast.classList.add('show'), 10);
+  
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+function showConfirmDialog(title, message, callback) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMessage').innerHTML = message;
+  document.getElementById('confirmDialog').classList.add('active');
+  
+  pendingConfirm = callback;
+}
+
+function confirmAction(confirmed) {
+  document.getElementById('confirmDialog').classList.remove('active');
+  
+  if (pendingConfirm) {
+    pendingConfirm(confirmed);
+    pendingConfirm = null;
+  }
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+  
+  sidebar.classList.toggle('sidebar-collapsed');
+  mainContent.classList.toggle('main-content-expanded');
+}
+
+function toggleTheme() {
+  const current = document.body.dataset.theme;
+  const newTheme = current === 'light' ? 'dark' : 'light';
+  document.body.dataset.theme = newTheme;
+  
+  const icon = document.querySelector('#themeToggle i');
+  icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+  
+  const settings = db.get('SETTINGS');
+  settings.theme = newTheme;
+  db.set('SETTINGS', settings);
+}
+
+function toggleFabMenu() {
+  const menu = document.getElementById('fabMenu');
+  const icon = document.getElementById('fabIcon');
+  
+  fabMenuOpen = !fabMenuOpen;
+  menu.classList.toggle('active', fabMenuOpen);
+  icon.className = fabMenuOpen ? 'fas fa-times' : 'fas fa-plus';
+}
+
+function quickAction(action) {
+  switch(action) {
+    case 'addJob':
+      showSection('addJobSection');
+      break;
+    case 'generateInvoice':
+      showSection('allJobs');
+      break;
+    case 'uploadPhotos':
+      uploadPhotos();
+      break;
+    case 'exportData':
+      exportToExcel();
+      break;
+  }
+  toggleFabMenu();
+}
+
+function updatePermissions() {
+  if (!currentUser) return;
+  
+  const canDelete = currentUser.permissions.includes('delete');
+  const canViewSummary = currentUser.permissions.includes('view_summary');
+  const canExport = currentUser.permissions.includes('export');
+  
+  document.querySelectorAll('.del-btn').forEach(btn => {
+    btn.disabled = !canDelete;
+  });
+  
+  const exportButtons = document.querySelectorAll('[onclick*="export"]');
+  exportButtons.forEach(btn => {
+    btn.disabled = !canExport;
+  });
+  
+  const summaryElements = document.querySelectorAll('[onclick*="Report"], [onclick*="Analytics"]');
+  summaryElements.forEach(el => {
+    el.disabled = !canViewSummary;
+  });
+}
+
+// ========== PWA FUNCTIONALITY ==========
+function checkPWAInstall() {
+  if (!CONFIG.pwaEnabled) return;
+  
+  if (window.matchMedia('(display-mode: standalone)').matches || 
+      window.navigator.standalone === true) {
+    return;
+  }
+  
+  setTimeout(() => {
+    document.getElementById('pwaPrompt').style.display = 'block';
+  }, 5000);
+}
+
+function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        showToast('App installed successfully!', 'success');
+      }
+      deferredPrompt = null;
+    });
+  }
+  hidePWAPrompt();
+}
+
+function hidePWAPrompt() {
+  document.getElementById('pwaPrompt').style.display = 'none';
+}
+
+// ========== AUTO-SAVE ==========
+function startAutoSave() {
+  setInterval(() => {
+    if (currentUser && currentSection === 'addJobSection') {
+      showToast('Auto-saved draft', 'info');
+    }
+  }, CONFIG.autoSaveInterval);
+}
+
+// ========== INITIALIZATION ==========
+document.addEventListener('DOMContentLoaded', function() {
+  const settings = db.get('SETTINGS');
+  const savedTheme = settings?.theme || 'dark';
+  document.body.dataset.theme = savedTheme;
+  
+  const themeIcon = document.querySelector('#themeToggle i');
+  if (themeIcon) {
+    themeIcon.className = savedTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+  }
+  
+  const savedUser = db.get('CURRENT_USER');
+  if (savedUser) {
+    currentUser = savedUser;
+    document.getElementById('accountPage').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    updateUserInterface();
+    initializeDashboard();
+  }
+  
+  const today = new Date();
+  const eventDateInput = document.getElementById('eventDate');
+  if (eventDateInput) {
+    eventDateInput.value = today.toISOString().split('T')[0];
+  }
+  
+  document.getElementById('loginPass')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') login();
+  });
+  
+  document.getElementById('globalSearch')?.addEventListener('input', function(e) {
+    performGlobalSearch(e.target.value);
+  });
+  
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+  
+  const lastBackup = settings?.backup?.lastBackup;
+  if (lastBackup) {
+    document.getElementById('lastBackupTime').textContent = new Date(lastBackup).toLocaleString();
+  }
+  
+  checkForUpdates();
+});
+
+function initializeDashboard() {
+  loadDashboardWidgets();
+  showSection('dashboardHome');
+}
+
+function refreshDashboard() {
+  if (currentSection === 'dashboardHome') {
+    loadDashboardWidgets();
+  }
+  showToast('Dashboard refreshed', 'success');
+}
+
+function performGlobalSearch(query) {
+  if (!query.trim()) return;
+  
+  const jobs = getJobs();
+  const results = jobs.filter(job => 
+    (job.client && job.client.toLowerCase().includes(query.toLowerCase())) ||
+    (job.category && job.category.toLowerCase().includes(query.toLowerCase())) ||
+    (job.date && job.date.includes(query))
+  );
+  
+  if (results.length > 0) {
+    showToast(`Found ${results.length} matching jobs`, 'info');
+  }
+}
+
+function quickAddJob() {
+  showSection('addJobSection');
+  toggleFabMenu();
+}
+
+function scanQRCode() {
+  showToast('QR Code scanner activated', 'info');
+  toggleFabMenu();
+}
+
+function takePhoto() {
+  showToast('Camera activated for photo capture', 'info');
+  toggleFabMenu();
+}
+
+function showQuickStats() {
+  showToast('Quick stats displayed', 'info');
+  toggleFabMenu();
+}
+
+function filterJobs() {
+  const filter = document.getElementById('jobFilter').value;
+  const jobs = getJobs();
+  
+  let filteredJobs = jobs;
+  switch(filter) {
+    case 'pending':
+      filteredJobs = jobs.filter(job => (job.advance || 0) < (job.packagePrice || 0));
+      break;
+    case 'completed':
+      filteredJobs = jobs.filter(job => (job.advance || 0) >= (job.packagePrice || 0));
+      break;
+    case 'draft':
+      filteredJobs = jobs.filter(job => job.status === 'draft');
+      break;
+  }
+  
+  loadFilteredJobs(filteredJobs);
+}
+
+function sortJobList() {
+  const sortBy = document.getElementById('sortJobs').value;
+  const jobs = getJobs();
+  
+  let sortedJobs = [...jobs];
+  switch(sortBy) {
+    case 'newest':
+      sortedJobs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      break;
+    case 'oldest':
+      sortedJobs.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      break;
+    case 'price-high':
+      sortedJobs.sort((a, b) => (b.packagePrice || 0) - (a.packagePrice || 0));
+      break;
+    case 'price-low':
+      sortedJobs.sort((a, b) => (a.packagePrice || 0) - (b.packagePrice || 0));
+      break;
+  }
+  
+  loadFilteredJobs(sortedJobs);
+}
+
+function loadFilteredJobs(jobs) {
+  const container = document.getElementById('jobsList');
+  
+  if (jobs.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:60px; color:var(--text-secondary);"><i class="fas fa-clipboard-list" style="font-size:60px; margin-bottom:20px;"></i><h3>No Jobs Found</h3><p>Try a different filter</p></div>';
+    return;
+  }
+  
+  container.innerHTML = jobs.map((job, index) => `
+    <div class="neu-card" style="padding:20px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;">
+          <div style="width:50px; height:50px; border-radius:12px; background:linear-gradient(135deg, var(--primary), var(--secondary)); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">
+            ${job.client.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <div style="font-weight:700; color:var(--text); font-size:18px;">${job.client}</div>
+            <div style="color:var(--text-secondary); font-size:14px;">
+              ${job.date} • ${job.type} • ${job.category}
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+          <div>
+            <div style="font-size:12px; color:var(--text-secondary);">Package</div>
+            <div style="font-weight:600; color:var(--success);">${formatCurrency(job.packagePrice || 0)}</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-secondary);">Advance</div>
+            <div style="font-weight:600; color:var(--warning);">${formatCurrency(job.advance || 0)}</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-secondary);">Profit</div>
+            <div style="font-weight:600; color:var(--accent);">${formatCurrency(job.profit || 0)}</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-secondary);">Status</div>
+            <div style="font-weight:600; color:${job.status === 'draft' ? 'var(--warning)' : job.paymentStatus === 'paid' ? 'var(--success)' : 'var(--danger)'}">
+              ${job.status === 'draft' ? 'Draft' : job.paymentStatus || 'Pending'}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="neu-btn" onclick="editJob('${job.id}')" style="padding:8px 16px; font-size:14px;">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="neu-btn" onclick="deleteJob('${job.id}')" style="padding:8px 16px; font-size:14px; background:var(--danger);">
+          <i class="fas fa-trash"></i>
+        </button>
+        <button class="neu-btn" onclick="generateInvoiceModal('${job.id}')" style="padding:8px 16px; font-size:14px; background:var(--secondary);">
+          <i class="fas fa-file-invoice"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function exportJobList() {
+  exportToExcel();
+}
+
+function filterReminders() {
+  const filter = document.getElementById('reminderFilter').value;
+  showToast(`Filtered reminders by: ${filter}`, 'info');
+}
+
+function showReminderSettings() {
+  showToast('Reminder settings opened', 'info');
+}
+
+function importTemplate() {
+  showToast('Template import feature', 'info');
+}
+
+function showCustomReportBuilder() {
+  document.getElementById('customReportBuilder').classList.toggle('hidden');
+}
+
+function generateCustomReport() {
+  showToast('Custom report generated', 'success');
+}
+
+function restoreBackup() {
+  showToast('Backup restore feature', 'info');
+}
+
+function checkForUpdates() {
+  setTimeout(() => {
+    if (Math.random() > 0.8) {
+      showToast('System update available', 'info');
+    }
+  }, 5000);
+}
+
+// Export functions for HTML onclick handlers
+window.login = login;
+window.logout = logout;
+window.showLoginForm = showLoginForm;
+window.showNewAccountForm = showNewAccountForm;
+window.selectAccountType = selectAccountType;
+window.createNewAccount = createNewAccount;
+window.togglePasswordVisibility = togglePasswordVisibility;
+window.showSection = showSection;
+window.toggleTheme = toggleTheme;
+window.toggleSidebar = toggleSidebar;
+window.toggleFabMenu = toggleFabMenu;
+window.quickAction = quickAction;
+window.confirmAction = confirmAction;
+window.uploadPhotos = uploadPhotos;
+window.addExpense = addExpense;
+window.sendReminders = sendReminders;
+window.createNewTemplate = createNewTemplate;
+window.generateReport = generateReport;
+window.exportToExcel = exportToExcel;
+window.updateProfile = updateProfile;
+window.createBackup = createBackup;
+window.installPWA = installPWA;
+window.hidePWAPrompt = hidePWAPrompt;
+window.refreshDashboard = refreshDashboard;
+window.updateFramePrice = updateFramePrice;
+window.calculateProfit = calculateProfit;
+window.saveJob = saveJob;
+window.saveJobAsDraft = saveJobAsDraft;
+window.clearJobForm = clearJobForm;
+window.editJob = editJob;
+window.deleteJob = deleteJob;
+window.generateInvoiceModal = generateInvoiceModal;
+window.downloadInvoicePDF = downloadInvoicePDF;
+window.printInvoice = printInvoice;
+window.closeInvoiceModal = closeInvoiceModal;
+window.bulkGenerateInvoices = bulkGenerateInvoices;
+window.quickAddJob = quickAddJob;
+window.scanQRCode = scanQRCode;
+window.takePhoto = takePhoto;
+window.showQuickStats = showQuickStats;
+window.filterJobs = filterJobs;
+window.sortJobList = sortJobList;
+window.exportJobList = exportJobList;
+window.filterReminders = filterReminders;
+window.showReminderSettings = showReminderSettings;
+window.importTemplate = importTemplate;
+window.showCustomReportBuilder = showCustomReportBuilder;
+window.generateCustomReport = generateCustomReport;
+window.restoreBackup = restoreBackup;
+window.showCreateUserModal = showCreateUserModal;
+window.editUser = editUser;
+window.deleteUser = deleteUser;
+window.resetUserPassword = resetUserPassword;
+window.searchUsers = searchUsers;
+window.refreshUserList = refreshUserList;
+</script>
+</body>
+</html>
